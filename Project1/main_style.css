@@ -20,7 +20,12 @@ body {
   align-items: center;
   overflow: hidden;
   text-align: center;
-  background: linear-gradient(180deg, var(--gold), var(--marigold));
+  background: linear-gradient(
+    180deg,
+    var(--gold),
+    var(--marigold),
+    var(--gold)
+  );
   background-size: auto;
   background-attachment: fixed;
 }

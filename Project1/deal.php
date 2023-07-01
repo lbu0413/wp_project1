@@ -1,22 +1,27 @@
 <?php
+session_start();
 /** 
  * get sum of squares 
  *
  * @return float 
  */
-function sum_squares(float: $carry, float:$item):float 
+function sum_squares($carry, $item):float 
 {
-    return $carry + ($item * $item)
+    return $carry + ($item * $item);
+}
+function filter_opposite($value):bool 
+{
+    return (bool)(!$value);
 }
 /** 
  * Get banker un adjusted offer
  *
  * @return float sqrt of mean of squares
  */
-function get_offer(float: $remaining = null): float 
+function get_offer(array $remaining = null): float 
 {
     if ($remaining === null) {
-        $remaining = array_filter(array_combine($_SESSION['cases'], $_SESSION['valid']));
+        $remaining = array_keys(array_filter(array_combine($_SESSION['cases'], $_SESSION['opened']), "filter_opposite"));
     }
     $offer = array_reduce($remaining, "sum_squares")/count($remaining);
     $offer = sqrt($offer);
@@ -31,22 +36,25 @@ function get_adj_offer():float
 {
     //TODO: Adjust based on how far into the game player is 
     // Farther in == higher offers
-    $remaining = array_filter(array_combine($_SESSION['cases'], $_SESSION['valid']));
+    $remaining = array_keys(array_filter(array_combine($_SESSION['cases'], $_SESSION['opened']), "filter_opposite"));
+    $_SESSION['rem'] = $remaining;
+    // $remaining = array_filter(array_combine($_SESSION['cases'], $_SESSION['opened']));
     // never offer more than the final remaining case
-    return min(get_offer()*(0.5 + rand()/getrandmax()*0.75), max($remaining));
+    return min(get_offer($remaining)*(0.5 + rand()/getrandmax()*0.75), max($remaining));
 }
 if (! isset($_SESSION['cases'])) {
     // set up new game
-    session_register(
-        'cases', // hidden values inside of cases
-        'valid', // mask for cases which havent been opened
-        'opened', // values of cases which are open and visible to player
-        'offer', // banker offer for current turn
-        'counter', // tracks counter offer availability
-        'counter_offer', // the amount counter offered by player
-        'score', //final score - set to 0 to indicate ongoing game
-        'prev' // track action on previous turn
-    );
+  
+    // session_register(
+    //     'cases', // hidden values inside of cases
+    //     'valid', // mask for cases which havent been opened
+    //     'opened', // values of cases which are open and visible to player
+    //     'offer', // banker offer for current turn
+    //     'counter', // tracks counter offer availability
+    //     'counter_offer', // the amount counter offered by player
+    //     'score', //final score - set to 0 to indicate ongoing game
+    //     'prev' // track action on previous turn
+    // );
 
     $_SESSION['cases'] = [
         0.01, 1, 5, 10, 25, 50, 75,
@@ -57,8 +65,8 @@ if (! isset($_SESSION['cases'])) {
         1000000,
     ];
     shuffle($_SESSION['cases']);
-    $_SESSION['opened'] = array_fill(count: count($_SESSION['cases']), value: 0);
-    $_SESSION['valid'] = array_fill(count: count($_SESSION['cases']), value: true);
+    $_SESSION['opened'] = array_fill(0, count($_SESSION['cases']),  0);
+    // $_SESSION['valid'] = array_fill(0, count($_SESSION['cases']),  true);
     $_SESSION['counter'] = 0;
     $_SESSION['counter_offer'] = -1;
     $_SESSION['score'] = 0;
@@ -66,7 +74,7 @@ if (! isset($_SESSION['cases'])) {
     // check if selected case is valid or if counter offer made
     $case_no = $_GET['case'];
     $value = $_SESSION['cases'][$case_no];
-    if ($_SESSION['valid'][$case_no]) {
+    if (!$_SESSION['opened'][$case_no]) {
         // on the game screen if the case number is 0
         // show a closed case otherwise display the value
         $_SESSION['opened'][$case_no] = $value;
