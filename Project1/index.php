@@ -27,17 +27,16 @@
       <div class="card-wrapper">
         <div class="card">
           <div class="card-front"><h1>PLAY NOW!</h1></div>
-          <div class="card-back">
-            <div>
+          <div class="card-back inner-outline">
+            <div >
               <p>
                 <!--
                   Maybe add a cookie here to
                   detect returning users or use session tokens
-                  TODO: Add marigold internal border like the show logo
                 -->
                 <a href="./signin.php">Returning player?</a>
                 <br><br>
-                <a href="./register.php">New User?</a>
+                <a href="./register.php">First time?</a>
               </p>
             </div>
           </div>

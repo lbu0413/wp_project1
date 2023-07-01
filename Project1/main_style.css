@@ -14,16 +14,15 @@ body {
   margin: 0;
 }
 .content-body {
-  flex: 1;
   width: 100%;
   display: flex;
+  flex: 1;
   align-items: center;
   overflow: hidden;
   text-align: center;
   background: linear-gradient(180deg, var(--gold), var(--marigold));
   background-size: auto;
   background-attachment: fixed;
-  z-index: 2;
 }
 .content-body h1 {
   flex: 2;
@@ -31,17 +30,9 @@ body {
   font-size: 80pt;
   margin: auto;
 }
-#hidden-box {
-  z-index: -2;
-  margin: auto;
-  /* display: none; */
-  visibility: hidden;
-  position: absolute;
-  background: black;
-}
-#hidden-signin-signup {
-  border: 4px var(--marigold);
-  color: var(--marigold);
+.inner-outline {
+  outline: 10px solid var(--marigold);
+  outline-offset: -20px;
 }
 #main-header {
   margin: 0;
