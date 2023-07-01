@@ -10,7 +10,7 @@
 
 <body class="register_body">
   <div class="register_header">
-    <img src="./logo.png" alt="logo" class="logo">
+    <img src="./assets/logo.png" alt="logo" class="logo">
     <h1>Register</h1>
   </div>
   <div class="register_form">
