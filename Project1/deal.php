@@ -1,5 +1,16 @@
 <?php
 session_start();
+/**
+ *  Opens all cases 
+ *
+ * @return null 
+ */
+function open_all_cases()
+{
+    for ($j = 0; $j < count($_SESSION['cases']); $j++) {
+        $_SESSION['opened'] = $_SESSION['cases'];
+    }
+}
 /** 
  * get sum of squares 
  *
@@ -9,9 +20,31 @@ function sum_squares($carry, $item):float
 {
     return $carry + ($item * $item);
 }
+/**
+ * glorified not operator
+ *
+ * @return null
+ */
 function filter_opposite($value):bool 
 {
     return (bool)(!$value);
+}
+/** 
+ * get all unopened cases
+ *
+ * @return array of unopened cases
+ */
+function get_remaining()
+{
+    return array_keys(
+        array_filter(
+            array_combine(
+                $_SESSION['cases'],
+                $_SESSION['opened']
+            ),
+            "filter_opposite"
+        )
+    );
 }
 /** 
  * Get banker un adjusted offer
@@ -21,7 +54,7 @@ function filter_opposite($value):bool
 function get_offer(array $remaining = null): float 
 {
     if ($remaining === null) {
-        $remaining = array_keys(array_filter(array_combine($_SESSION['cases'], $_SESSION['opened']), "filter_opposite"));
+        $remaining = get_remaining();
     }
     $offer = array_reduce($remaining, "sum_squares")/count($remaining);
     $offer = sqrt($offer);
@@ -36,18 +69,20 @@ function get_adj_offer():float
 {
     //TODO: Adjust based on how far into the game player is 
     // Farther in == higher offers
-    $remaining = array_keys(array_filter(array_combine($_SESSION['cases'], $_SESSION['opened']), "filter_opposite"));
+    $remaining = get_remaining();
+    // REMOVE: just for debugging
     $_SESSION['rem'] = $remaining;
-    // $remaining = array_filter(array_combine($_SESSION['cases'], $_SESSION['opened']));
+    if (count($remaining) === 0) {
+        return 0;
+    }
     // never offer more than the final remaining case
-    return min(get_offer($remaining)*(0.5 + rand()/getrandmax()*0.75), max($remaining));
+    return min(get_offer($remaining)*(0.5 + rand()/getrandmax()), max($remaining));
 }
 if (! isset($_SESSION['cases'])) {
     // set up new game
   
     // session_register(
     //     'cases', // hidden values inside of cases
-    //     'valid', // mask for cases which havent been opened
     //     'opened', // values of cases which are open and visible to player
     //     'offer', // banker offer for current turn
     //     'counter', // tracks counter offer availability
@@ -66,32 +101,50 @@ if (! isset($_SESSION['cases'])) {
     ];
     shuffle($_SESSION['cases']);
     $_SESSION['opened'] = array_fill(0, count($_SESSION['cases']),  0);
-    // $_SESSION['valid'] = array_fill(0, count($_SESSION['cases']),  true);
     $_SESSION['counter'] = 0;
     $_SESSION['counter_offer'] = -1;
     $_SESSION['score'] = 0;
+    $_SESSION['no_left'] = 26;
+  
 } else {
     // check if selected case is valid or if counter offer made
     $case_no = $_GET['case'];
-    $value = $_SESSION['cases'][$case_no];
-    if (!$_SESSION['opened'][$case_no]) {
-        // on the game screen if the case number is 0
-        // show a closed case otherwise display the value
-        $_SESSION['opened'][$case_no] = $value;
-        $_SESSION['offer'] = get_adj_offer();
+    if ($case_no >=0 && $case_no < count($_SESSION['cases'])) {
+        $value = $_SESSION['cases'][$case_no];
+        if (!$_SESSION['opened'][$case_no]) {
+            // on the game screen if the case number is 0
+            // show a closed case otherwise display the value
+            $_SESSION['opened'][$case_no] = $value;
+            $_SESSION['no_left']--;
+            if ($_SESSION['no_left'] === 1) {
+                $_SESSION['score'] = get_remaining()[0]; // get last non open case
+                open_all_cases();
+                // TODO: add session variable or get to get big reveal for last case
+            }
+            else{
+                  $_SESSION['offer'] = get_adj_offer();
+            }
 
-    } elseif ($_SESSION['counter'] === 1) {
-        // counter === 0 if counter available and unused
-        // counter === 1 if counter available and used 
-        // counter === 2 if counter unavailable
-        $_SESSION['counter']++;
+        } elseif ($_SESSION['counter'] === 1) {
+            // counter === 0 if counter available and unused
+            // counter === 1 if counter available and used 
+            // counter === 2 if counter unavailable
+            $_SESSION['counter']++;
 
-        if ($_SESSION['counter_offer'] < get_offer()*1.1) {
-            // open all cases and submit final score 
-            $_SESSION['score'] = $_SESSION['counter_offer'];
+            if ($_SESSION['counter_offer'] < get_offer()*1.1) {
+                // open all cases and submit final score 
+                $_SESSION['score'] = $_SESSION['counter_offer'];
+                open_all_cases();
+            }
         }
     
     }
+    elseif ($case_no === -1) {
+        // offer accepted end game
+        $_SESSION['score'] = $_SESSION['offer'];
+        open_all_cases();
+    }
+  
 }
 // get request to open briefcase
 // check if briefcase has already been opened
