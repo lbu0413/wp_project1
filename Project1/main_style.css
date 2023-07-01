@@ -1,0 +1,116 @@
+:root {
+  --gold: #c09b19;
+  --brown: #251b0c;
+  --marigold: #fbeb8e;
+}
+html {
+  height: 100%;
+}
+body {
+  font-family: "Eurostile", sans-serif;
+  display: flex;
+  flex-flow: column wrap;
+  height: 100%;
+  margin: 0;
+}
+.content-body {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-align: center;
+  background: linear-gradient(180deg, var(--gold), var(--marigold));
+  background-size: auto;
+  background-attachment: fixed;
+  z-index: 2;
+}
+.content-body h1 {
+  flex: 2;
+  box-sizing: border-box;
+  font-size: 80pt;
+  margin: auto;
+}
+#hidden-box {
+  z-index: -2;
+  margin: auto;
+  /* display: none; */
+  visibility: hidden;
+  position: absolute;
+  background: black;
+}
+#hidden-signin-signup {
+  border: 4px var(--marigold);
+  color: var(--marigold);
+}
+#main-header {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  justify-content: center;
+  position: sticky;
+  display: flex;
+  background: black;
+  background-size: cover;
+  flex-flow: column nowrap;
+  color: var(--marigold);
+  font-weight: bold;
+  font-size: 20pt;
+}
+
+@-webkit-keyframes ticker {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+
+  100% {
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes ticker {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+
+  100% {
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+.ticker-wrap {
+  width: 100vw;
+  overflow: hidden;
+  height: 4rem;
+  background-color: rgba(#000, 0.9);
+  padding-left: 100%;
+  box-sizing: content-box;
+}
+.ticker {
+  display: inline-block;
+  /* display: flex; */
+  height: 4rem;
+  line-height: 4rem;
+  white-space: nowrap;
+  padding-right: 100%;
+  box-sizing: content-box;
+
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-name: ticker;
+  animation-name: ticker;
+  -webkit-animation-duration: 10s;
+  animation-duration: 10s;
+}
+.ticker div {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  display: inline-block;
+}

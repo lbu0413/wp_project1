@@ -1,44 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deal or No Deal</title>
     <link rel="stylesheet" type="text/css" href="main_style.css" />
+    <link rel="stylesheet" type="text/css" href="card_style.css" />
   </head>
   <body>
     <!--Make the header sticky-->
     <header id="main-header">
       <img src="./assets/logo-large.png" alt="DEAL OR NO DEAL" />
+      <!-- Side scrolling leader-board along the top -->
+      <!-- https://codepen.io/lewismcarey/pen/GJZVoG -->
       <div class="ticker-wrap">
         <div class="ticker">
-          <div>
-            1. Jack Morris - $100,000
-          </div>
-          <div>
-             2. Wook Lee - $20,000
-          </div>
-          
+          <div>1. Jack Morris - $100,000</div>
+          <div>2. Wook Lee - $20,000</div>
           <?php
-          // load leader-board file and print all in order
+              //TODO: Load leader board from file and display top 10
             ?>
         </div>
       </div>
     </header>
     <div class="content-body">
-      <!-- Side scrolling leader-board along the top -->
-      <!-- https://codepen.io/lewismcarey/pen/GJZVoG -->
-      <h1>Play Now!</h1>
-      <!-- Reveal hidden signin on click or hover -->
-      <div id="hidden-box">
-        <div id="hidden-signin-signup">
-        Returning User?
-        <!--
-          Maybe add a cookie here to
-          detect returning users or use session tokens
-        -->
-        <a href="./signin.php">Login</a>
-        <br /><br />
-        New User?
-        <a href="./signup.php">Sign up</a>
+      <div class="card-wrapper">
+        <div class="card">
+          <div class="card-front"><h1>PLAY NOW!</h1></div>
+          <div class="card-back">
+            <div>
+              <p>
+                <!--
+                  Maybe add a cookie here to
+                  detect returning users or use session tokens
+                  TODO: Add marigold internal border like the show logo
+                -->
+                <a href="./signin.php">Returning player?</a>
+                <br><br>
+                <a href="./register.php">New User?</a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
