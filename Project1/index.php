@@ -10,7 +10,13 @@
       <img src="./assets/logo-large.png" alt="DEAL OR NO DEAL" />
       <div class="ticker-wrap">
         <div class="ticker">
-          1. Jack Morris - 10000
+          <div>
+            1. Jack Morris - $100,000
+          </div>
+          <div>
+             2. Wook Lee - $20,000
+          </div>
+          
           <?php
           // load leader-board file and print all in order
             ?>
@@ -27,7 +33,7 @@
         Returning User?
         <!--
           Maybe add a cookie here to
-          detect returning users or use session tokens 
+          detect returning users or use session tokens
         -->
         <a href="./signin.php">Login</a>
         <br /><br />
