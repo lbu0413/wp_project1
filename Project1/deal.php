@@ -57,7 +57,6 @@ function get_offer(array $remaining = null): float
         $remaining = get_remaining();
     }
     $offer = array_reduce($remaining, "sum_squares")/count($remaining);
-    $offer = sqrt($offer);
     return sqrt($offer);
 }
 /**
@@ -76,7 +75,11 @@ function get_adj_offer():float
         return 0;
     }
     // never offer more than the final remaining case
-    return min(get_offer($remaining)*(0.5 + rand()/getrandmax()), max($remaining));
+    // + rand()/getrandmax()
+    return min(
+        get_offer($remaining)*(1 - $_SESSION['no_left'] / count($_SESSION['cases'])),
+        max($remaining)
+    );
 }
 if (! isset($_SESSION['cases'])) {
     // set up new game
@@ -105,10 +108,12 @@ if (! isset($_SESSION['cases'])) {
     $_SESSION['counter_offer'] = -1;
     $_SESSION['score'] = 0;
     $_SESSION['no_left'] = 26;
+    $_SESSION['offer'] = 0;
   
 } else {
     // check if selected case is valid or if counter offer made
     $case_no = $_GET['case'];
+  
     if ($case_no >=0 && $case_no < count($_SESSION['cases'])) {
         $value = $_SESSION['cases'][$case_no];
         if (!$_SESSION['opened'][$case_no]) {
@@ -118,7 +123,6 @@ if (! isset($_SESSION['cases'])) {
             $_SESSION['no_left']--;
             if ($_SESSION['no_left'] === 1) {
                 $_SESSION['score'] = get_remaining()[0]; // get last non open case
-                open_all_cases();
                 // TODO: add session variable or get to get big reveal for last case
             }
             else{
@@ -134,21 +138,18 @@ if (! isset($_SESSION['cases'])) {
             if ($_SESSION['counter_offer'] < get_offer()*1.1) {
                 // open all cases and submit final score 
                 $_SESSION['score'] = $_SESSION['counter_offer'];
-                open_all_cases();
             }
         }
-    
-    }
-    elseif ($case_no === -1) {
+    } elseif ($case_no == -1) {
         // offer accepted end game
         $_SESSION['score'] = $_SESSION['offer'];
-        open_all_cases();
     }
-  
+    if ($_SESSION['score'] !== 0) {
+        open_all_cases();
+        unset($_SESSION['cases']);
+    } 
 }
-if ($_SESSION['score'] !== 0) {
-    unset($_SESSION['cases']);
-}
+// error_log(print_r($_GET['case'], true));
 // get request to open briefcase
 // check if briefcase has already been opened
 // return the value and the next banker offer

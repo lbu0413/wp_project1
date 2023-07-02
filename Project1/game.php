@@ -13,7 +13,10 @@
       <?php
         if (isset($_SESSION['offer'])&&$_SESSION['offer']!== 0&&$_SESSION['score']===0) {
             ?>
-      <h2>Banker offer: $<?php echo $_SESSION['offer']?></h2>
+      <h2>Banker offer: $<?php echo number_format($_SESSION['offer'], 2)?></h2>
+      <form style="margin: auto;" action="deal.php" method="get">
+        <button value="-1" name="case">Accept Offer</button>
+      </form>
             <?php
         }
         ?>
@@ -22,8 +25,8 @@
           <?php
             for ($i = 0; $i < 26; $i++) {
                 if ($_SESSION['opened'][$i] !== 0 ) {
-                    echo "<div style=\"width:100%;height:100%;grid-column:".($i%7+1).";\">"
-                    .($_SESSION['opened'][$i]).
+                    echo "<div style=\"width:100%;height:100%;grid-column:".($i%7+1).";\">$"
+                    .number_format($_SESSION['opened'][$i], 2).
                     "</div>";
                     continue;
                 }
@@ -44,15 +47,15 @@
         <?php 
         if ($_SESSION['score'] !== 0) {
             ?>
-        <h2>You Won $<?php echo $_SESSION['score']?>!!!</h2>
+        <h2>You Won $<?php echo number_format($_SESSION['score'], 2)?>!!!</h2>
         <button>Play Again?</button>
             <?php 
         }
         ?>
      </form>
-<div>
-    <?php print_r($_SESSION);?>
-</div>
+      <div>
+          <?php print_r($_SESSION);?>
+      </div>
     </div>
   </body>
 </html>
