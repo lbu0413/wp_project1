@@ -1,0 +1,29 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  text-align: center;
+
+  color: white;
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1)),
+    url("./assets/register_submit_background.jpeg");
+  background-size: cover;
+}
+
+a {
+  color: gold;
+  text-decoration: none;
+  font-style: italic;
+}
+
+.username {
+  font-style: italic;
+  color: gold;
+  font-size: 1.5em;
+}
+
+a:hover {
+  color: white;
+}
