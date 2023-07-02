@@ -7,8 +7,8 @@ get_auth();
 <html lang="en">
   <head>
     <title>Deal or No Deal</title>
-    <link rel="stylesheet" type="text/css" href="./main_style.css">
-    <link rel="stylesheet" type="text/css" href="game_style.css">
+    <link rel="stylesheet" type="text/css" href="./styles/main_style.css">
+    <link rel="stylesheet" type="text/css" href="./styles/game_style.css">
   </head>
   <body>
 
