@@ -1,6 +1,6 @@
 <?php session_start();
 require __DIR__."/common.php";
-get_auth();
+check_auth();
 ?>
 <!DOCTYPE HTML>
 
@@ -10,7 +10,7 @@ get_auth();
     <link rel="stylesheet" type="text/css" href="./styles/main_style.css">
     <link rel="stylesheet" type="text/css" href="./styles/game_style.css">
   </head>
-  <body>
+  <body style="flex-direction: column;">
 
     <div class="content-body">
       <?php

@@ -2,7 +2,7 @@
 session_start();
 
 require __DIR__."/common.php";
-$currentURL = get_auth();
+$currentURL = check_auth();
 // get the server url -- needed for testing locally
 /**
  *  Opens all cases 

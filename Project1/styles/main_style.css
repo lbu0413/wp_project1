@@ -9,7 +9,7 @@ html {
 body {
   font-family: "Eurostile", sans-serif;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 100%;
   margin: 0;
 }
