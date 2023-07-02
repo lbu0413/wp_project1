@@ -146,6 +146,9 @@ if (! isset($_SESSION['cases'])) {
     }
   
 }
+if ($_SESSION['score'] !== 0) {
+    unset($_SESSION['cases']);
+}
 // get request to open briefcase
 // check if briefcase has already been opened
 // return the value and the next banker offer

@@ -17,8 +17,10 @@ body {
   width: 100%;
   display: flex;
   flex: 1;
+  flex-flow: column wrap;
   align-items: center;
-  overflow: hidden;
+  overflow-y: visible;
+  overflow-x: hidden;
   text-align: center;
   background: linear-gradient(
     180deg,

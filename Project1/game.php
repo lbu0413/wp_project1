@@ -8,10 +8,15 @@
     <link rel="stylesheet" type="text/css" href="game_style.css">
   </head>
   <body>
-    <pre>
-    <?php print_r($_SESSION);?>
-    </pre>
+
     <div class="content-body">
+      <?php
+        if (isset($_SESSION['offer'])&&$_SESSION['offer']!== 0&&$_SESSION['score']===0) {
+            ?>
+      <h2>Banker offer: $<?php echo $_SESSION['offer']?></h2>
+            <?php
+        }
+        ?>
       <form style="margin:auto;" action="deal.php" method="get">
         <div class="cases-grid">
           <?php
@@ -36,7 +41,18 @@
             }
             ?>
         </div>
-      </form>
+        <?php 
+        if ($_SESSION['score'] !== 0) {
+            ?>
+        <h2>You Won $<?php echo $_SESSION['score']?>!!!</h2>
+        <button>Play Again?</button>
+            <?php 
+        }
+        ?>
+     </form>
+<div>
+    <?php print_r($_SESSION);?>
+</div>
     </div>
   </body>
 </html>
