@@ -2,6 +2,7 @@
 session_start();
 
 require __DIR__ . "/common.php";
+// $_SESSION['auth'] = true;
 $currentURL = check_auth();
 // get the server url -- needed for testing locally
 /**
@@ -134,7 +135,9 @@ if (!isset($_SESSION['cases'])) {
     $_SESSION['no_left'] = 26;
     $_SESSION['offer'] = 0;
 
-} else {
+} elseif (! isset($_GET['case'])) {
+    //pass
+}else {
     // check if selected case is valid or if counter offer made
     $case_no = $_GET['case'];
 

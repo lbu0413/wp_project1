@@ -8,7 +8,7 @@ function check_auth()
 
     // redirect to login page if no authentication from login
     if (!isset($_SESSION['auth']) || !$_SESSION['auth']) {
-        header("Location: $currentURL/signin.php");
+        header("Location: signin.html");
     } else {
         return $currentURL;
     }
