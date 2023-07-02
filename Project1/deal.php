@@ -1,5 +1,9 @@
 <?php
 session_start();
+
+require __DIR__."/common.php";
+$currentURL = get_auth();
+// get the server url -- needed for testing locally
 /**
  *  Opens all cases 
  *
@@ -34,7 +38,7 @@ function filter_opposite($value):bool
  *
  * @return array of unopened cases
  */
-function get_remaining()
+function get_remaining(): array
 {
     return array_keys(
         array_filter(
@@ -51,7 +55,7 @@ function get_remaining()
  *
  * @return float sqrt of mean of squares
  */
-function get_offer(array $remaining = null): float 
+function get_offer(array $remaining = null): float
 {
     if ($remaining === null) {
         $remaining = get_remaining();
@@ -60,7 +64,7 @@ function get_offer(array $remaining = null): float
     return sqrt($offer);
 }
 /**
- * Adjust banker offer by random factor
+ * Adjust banker offer by factor proportional to how many cases remain unopened
  *
  * @return float banker offer 
  */
@@ -165,9 +169,5 @@ if (! isset($_SESSION['cases'])) {
 //    or ignore offer
 
 // Reload the game board with the updated gamestate
-$protocol = ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ?
-  'https://' : 'http://';
-$host = $_SERVER['HTTP_HOST'];
-$currentURL = $protocol.$host;
 header("Location: $currentURL/game.php");
 ?>

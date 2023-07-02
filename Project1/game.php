@@ -1,4 +1,7 @@
-<?php session_start();?>
+<?php session_start();
+require __DIR__."/common.php";
+get_auth();
+?>
 <!DOCTYPE HTML>
 
 <html lang="en">
