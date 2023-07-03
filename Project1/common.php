@@ -12,7 +12,6 @@ function check_auth()
     } else {
         return $currentURL;
     }
-
 }
 
 
