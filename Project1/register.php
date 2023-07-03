@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register Page</title>
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./register_style.css">
 </head>
 
 <body class="register_body">
@@ -14,7 +14,7 @@
     <h1>Register</h1>
   </div>
   <div class="register_form">
-    <form action="signup_submit.php" method="post" class="register_form">
+    <form action="register_submit.php" method="post" class="register_form">
       <fieldset>
         <label for="username">Username
           <input type="text" name="username" size="16">
