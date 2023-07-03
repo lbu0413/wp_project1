@@ -53,26 +53,23 @@ function read_into_associative(array $data):array
     $_SESSION['leaderboard'] = $out;
     return $out;
 }
-
-
-function validate_user($username, $password)
+/**
+ * Get array of user data from userdata file 
+ *
+ * @return array
+ */
+function get_existing_users():array
 {
-    $userData = explode("\n", file_get_contents("./user_data/users.txt"));
-    foreach ($userData as $sub_userData) {
-        $username_password = explode(",", $sub_userData);
+    $userInfo = file_get_contents("./user_data/users.txt");
+    $userArray = [];
 
-        $valid_username = $username_password[0] === $username;
-        $valid_password = $username_password[1] === $password;
-
-        if ($valid_username && $valid_password) {
-            return true;
-        }
-
+    $lines = explode("\n", $userInfo);
+    foreach ($lines as $line) {
+        $name_password = explode(",", $line);
+        $userArray[$name_password[0]] = $name_password[1];
     }
-    return false;
+    return $userArray;
 }
-
-=======
 /** 
  * Get scores from score file 
  *
