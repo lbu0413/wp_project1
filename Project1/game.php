@@ -1,4 +1,5 @@
-<?php session_start();
+<?php
+session_start();
 require __DIR__."/common.php";
 check_auth();
 ?>
@@ -48,16 +49,19 @@ check_auth();
         </div>
         <?php 
         if ($_SESSION['score'] !== 0) {
+            $res = update_leaderboard();
+            if ($res) {
+                $str_res = ordinal($res);
+                echo "<h2>You got a new $str_res place highscore!</h2>";
+            }
             ?>
         <h2>You Won $<?php echo number_format($_SESSION['score'], 2)?>!!!</h2>
         <button>Play Again?</button>
             <?php 
+            $_SESSION['score'] = 0;
         }
         ?>
      </form>
-      <div>
-          <?php print_r($_SESSION);?>
-      </div>
     </div>
   </body>
 </html>

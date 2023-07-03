@@ -2,7 +2,12 @@
 session_start();
 define('NO_CASES', 26);
 require __DIR__ . "/common.php";
-// $_SESSION['auth'] = true;
+
+if (!isset($_SESSION['username'])) {
+    // all your highscore are belong to me
+    $_SESSION['username'] = 'Jack Morris';
+}
+// check for session authentication
 check_auth();
 // get the server url -- needed for testing locally
 /**
@@ -71,11 +76,7 @@ function get_offer(array $remaining = null): float
  */
 function get_adj_offer(): float
 {
-    //TODO: Adjust based on how far into the game player is 
-    // Farther in == higher offers
     $remaining = get_remaining();
-    // REMOVE: just for debugging
-    $_SESSION['rem'] = $remaining;
     if (count($remaining) === 0) {
         return 0;
     }
@@ -137,7 +138,7 @@ if (!isset($_SESSION['cases'])) {
 
 } elseif (! isset($_GET['case'])) {
     //pass
-}else {
+} else {
     // check if selected case is valid or if counter offer made
     $case_no = $_GET['case'];
 
@@ -149,7 +150,7 @@ if (!isset($_SESSION['cases'])) {
             $_SESSION['opened'][$case_no] = $value;
             $_SESSION['no_left']--;
             if ($_SESSION['no_left'] === 1) {
-                $_SESSION['score'] = get_remaining()[0]; // get last non open case
+                $_SESSION['score'] = get_remaining()[0]; // get last unopen case
                 // TODO: add session variable or get to get big reveal for last case
             } else {
                 $_SESSION['offer'] = get_adj_offer();
