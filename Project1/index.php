@@ -19,7 +19,7 @@
           <div>2. Wook Lee - $20,000</div>
           <?php
               //TODO: Load leader board from file and display top 10
-            ?>
+          ?>
         </div>
       </div>
     </header>
