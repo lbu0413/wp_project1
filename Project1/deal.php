@@ -1,9 +1,9 @@
 <?php
 session_start();
-
+define('NO_CASES', 26);
 require __DIR__ . "/common.php";
 // $_SESSION['auth'] = true;
-$currentURL = check_auth();
+check_auth();
 // get the server url -- needed for testing locally
 /**
  *  Opens all cases 
@@ -12,7 +12,7 @@ $currentURL = check_auth();
  */
 function open_all_cases()
 {
-    for ($j = 0; $j < count($_SESSION['cases']); $j++) {
+    for ($j = 0; $j < NO_CASES; $j++) {
         $_SESSION['opened'] = $_SESSION['cases'];
     }
 }
@@ -82,7 +82,7 @@ function get_adj_offer(): float
     // never offer more than the final remaining case
     // + rand()/getrandmax()
     return min(
-        get_offer($remaining) * (1 - $_SESSION['no_left'] / count($_SESSION['cases'])),
+        get_offer($remaining) * pow(1 - $_SESSION['no_left'] / NO_CASES, 2),
         max($remaining)
     );
 }
@@ -128,11 +128,11 @@ if (!isset($_SESSION['cases'])) {
         1000000,
     ];
     shuffle($_SESSION['cases']);
-    $_SESSION['opened'] = array_fill(0, count($_SESSION['cases']), 0);
+    $_SESSION['opened'] = array_fill(0, NO_CASES, 0);
     $_SESSION['counter'] = 0;
     $_SESSION['counter_offer'] = -1;
     $_SESSION['score'] = 0;
-    $_SESSION['no_left'] = 26;
+    $_SESSION['no_left'] = NO_CASES;
     $_SESSION['offer'] = 0;
 
 } elseif (! isset($_GET['case'])) {
@@ -141,7 +141,7 @@ if (!isset($_SESSION['cases'])) {
     // check if selected case is valid or if counter offer made
     $case_no = $_GET['case'];
 
-    if ($case_no >= 0 && $case_no < count($_SESSION['cases'])) {
+    if ($case_no >= 0 && $case_no < NO_CASES) {
         $value = $_SESSION['cases'][$case_no];
         if (!$_SESSION['opened'][$case_no]) {
             // on the game screen if the case number is 0
@@ -191,5 +191,5 @@ if (!isset($_SESSION['cases'])) {
 //    or ignore offer
 
 // Reload the game board with the updated gamestate
-header("Location: $currentURL/game.php");
+header("Location: game.php");
 ?>
