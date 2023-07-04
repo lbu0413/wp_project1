@@ -27,3 +27,14 @@ a {
 a:hover {
   color: white;
 }
+
+button {
+  outline: none;
+  padding: 10px;
+}
+
+button:hover {
+  color: white;
+  background-color: black;
+  cursor: pointer;
+}
