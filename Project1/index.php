@@ -38,9 +38,9 @@
                   Maybe add a cookie here to
                   detect returning users or use session tokens
                 -->
-              <a href="./signin.php">Returning player?</a>
+              <a href="./signin.html">Returning player?</a>
               <br><br>
-              <a href="./register.php">First time?</a>
+              <a href="./register.html">First time?</a>
             </p>
           </div>
         </div>
