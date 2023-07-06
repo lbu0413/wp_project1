@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["auth"] = true;
         header("Location: deal.php");
     } else {
-        echo "invalid username or password, please check again";
+        echo "invalid username or password, please try again";
     }
 
 
