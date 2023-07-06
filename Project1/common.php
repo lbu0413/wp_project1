@@ -71,8 +71,6 @@ function validate_user($username, $password)
     }
     return false;
 }
-
-=======
 /** 
  * Get scores from score file 
  *
