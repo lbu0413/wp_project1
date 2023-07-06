@@ -1,7 +1,12 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 session_start();
-// signin.php
+
+require __DIR__ . "/common.php";
+
 
 
 // retrieve the username & password
@@ -10,17 +15,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
 
 
-    // check if valid credentials
-    if (isset($_SESSION["users"][$username]) && $_SESSION["users"][$username]["password"] === $password) {
+    if (validate_user($username, $password)) {
+        setcookie("username", $username, time() + (86400 * 30), "/"); // Cookie expires in 30 days
+        setcookie("password", $password, time() + (86400 * 30), "/"); // Cookie expires in 30 days
+
         $_SESSION["username"] = $username;
-        // echo "login successful";
         $_SESSION["auth"] = true;
+
         header("Location: deal.php");
-        exit;
     } else {
-        echo "Invalid username or password.";
+        echo "invalid username or password, please try again";
     }
+
+
 }
+
 
 
 
