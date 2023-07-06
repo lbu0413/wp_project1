@@ -3,7 +3,6 @@ require __DIR__ . "/common.php";
 check_auth();
 ?>
 <!DOCTYPE HTML>
-
 <html lang="en">
 
 <head>
