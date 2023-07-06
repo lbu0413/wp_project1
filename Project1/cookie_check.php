@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 
@@ -45,7 +46,7 @@ if (isset($_COOKIE["username"]) && (isset($_COOKIE["password"]))) {
     }
 } else {
     // cookie expired, user needs to sign-in again
-    header("Location: signin.php");
+    header("Location: signin.html");
 }
 
 
