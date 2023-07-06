@@ -136,7 +136,7 @@ if (!isset($_SESSION['cases'])) {
     $_SESSION['no_left'] = NO_CASES;
     $_SESSION['offer'] = 0;
 
-} elseif (! isset($_GET['case'])) {
+} elseif (!isset($_GET['case'])) {
     //pass
 } else {
     // check if selected case is valid or if counter offer made
@@ -194,3 +194,4 @@ if (!isset($_SESSION['cases'])) {
 // Reload the game board with the updated gamestate
 header("Location: game.php");
 ?>
+

@@ -14,11 +14,9 @@
         <h1>Congrats!
             <span class="username">
                 <?php
-                session_start();
-
-                if (isset($_SESSION["current_username"])) {
-                    $username = $_SESSION["current_username"];
-                    echo "Welcome, " . $username . "!";
+                if (isset($_GET["username"])) {
+                    $username = $_GET["username"];
+                    echo "Welcome, " . htmlspecialchars($username) . "!";
                 }
                 ?>
             </span><br />

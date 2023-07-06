@@ -40,7 +40,7 @@
                   Maybe add a cookie here to
                   detect returning users or use session tokens
                 -->
-              <a href="./signin.html">Returning player?</a>
+              <a href="./cookie_check.php">Returning player?</a>
               <br><br>
               <a href="./register.html">First time?</a>
             </p>
