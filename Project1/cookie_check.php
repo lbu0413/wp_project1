@@ -1,35 +1,21 @@
 <?php
-
-session_start();
-
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+session_start();
 
-// include __DIR__ . '/signin.php';
+require __DIR__ . "/common.php";
+
+
+
+
 // var_dump($_COOKIE["username"]);
-echo '<pre>';
-print_r($_COOKIE);
-echo '</pre>';
+// echo '<pre>';
+// print_r($_COOKIE);
+// echo '</pre>';
 
 
-function validate_user($username, $password)
-{
-    $userData = explode("\n", file_get_contents("./user_data/users.txt"));
-    foreach ($userData as $sub_userData) {
-        $username_password = explode(",", $sub_userData);
 
-        $valid_username = $username_password[0] === $username;
-        $valid_password = $username_password[1] === $password;
-
-        if ($valid_username && $valid_password) {
-            return true;
-        }
-
-    }
-    return false;
-}
 
 // check if the returning user has cookies in their local system.
 if (isset($_COOKIE["username"]) && (isset($_COOKIE["password"]))) {
@@ -39,10 +25,11 @@ if (isset($_COOKIE["username"]) && (isset($_COOKIE["password"]))) {
 
 
     if (validate_user($username, $password)) {
+        $_SESSION["username"] = $username;
         $_SESSION["auth"] = true;
-        header("Location: deal.php");
+        header("Location: deal.php"); // valid credentials, user can go straight to play game.
     } else {
-        echo "invalid username or password, please try again.";
+        header("Location: signin.html"); // invalid credentials, redirect users to sign-in page.
     }
 } else {
     // cookie expired, user needs to sign-in again

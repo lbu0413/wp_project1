@@ -10,18 +10,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 
+    // function existing_user($username)
+    // {
+    //     $userInfo = explode("\n", file_get_contents("./user_data/users.txt"));
+    //     foreach ($userInfo as $sub_user_info) {
+    //         $name_password = explode(",", $sub_user_info);
+    //         if ($name_password[0] == $username) {
+    //             return true; // existing user
+    //         }
+
+    //     }
+    //     return false; // new user
+    // }
+
     function existing_user($username)
     {
-        $userInfo = explode("\n", file_get_contents("./user_data/users.txt"));
-        foreach ($userInfo as $sub_user_info) {
-            $name_password = explode(",", $sub_user_info);
-            if ($name_password[0] == $username) {
-                return true; // existing user
-            }
+        $userInfo = file_get_contents("./user_data/users.txt");
+        $userArray = [];
 
+        $lines = explode("\n", $userInfo);
+        foreach ($lines as $line) {
+            $name_password = explode(",", $line);
+            $userArray[$name_password[0]] = true;
         }
-        return false; // new user
+        // check if the username exists in the array
+        return array_key_exists($username, $userArray);
     }
+
 
     if (existing_user($username)) {
         echo "Username already exists";

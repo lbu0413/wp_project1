@@ -15,5 +15,22 @@ function check_auth()
 
 }
 
+function validate_user($username, $password)
+{
+    $userData = explode("\n", file_get_contents("./user_data/users.txt"));
+    foreach ($userData as $sub_userData) {
+        $username_password = explode(",", $sub_userData);
+
+        $valid_username = $username_password[0] === $username;
+        $valid_password = $username_password[1] === $password;
+
+        if ($valid_username && $valid_password) {
+            return true;
+        }
+
+    }
+    return false;
+}
+
 
 ?>
