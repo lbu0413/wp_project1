@@ -1,5 +1,7 @@
-<?php session_start();
-require __DIR__ . "/common.php";
+<?php
+session_start();
+require __DIR__."/common.php";
+
 check_auth();
 ?>
 <!DOCTYPE HTML>
@@ -45,24 +47,27 @@ check_auth();
                 value=" . $i . " 
                 name=\"case\"
                 >"
-            . $j .
-            "</button>";
+                .$j.
+                "</button>";
+            }
+            ?>
+        </div>
+        <?php 
+        if ($_SESSION['score'] !== 0) {
+            $res = update_leaderboard();
+            if ($res) {
+                $str_res = ordinal($res);
+                echo "<h2>You got a new $str_res place highscore!</h2>";
+            }
+            ?>
+        <h2>You Won $<?php echo number_format($_SESSION['score'], 2)?>!!!</h2>
+        <button>Play Again?</button>
+            <?php 
+            $_SESSION['score'] = 0;
         }
         ?>
-      </div>
-      <?php
-      if ($_SESSION['score'] !== 0) {
-        ?>
-        <h2>You Won $
-          <?php echo number_format($_SESSION['score'], 2) ?>!!!
-        </h2>
-        <button>Play Again?</button>
-        <?php
-      }
-      ?>
-    </form>
-    <div>
-      <?php print_r($_SESSION); ?>
+     </form>
+
     </div>
   </div>
 </body>

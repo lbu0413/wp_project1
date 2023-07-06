@@ -17,11 +17,13 @@
     <!-- https://codepen.io/lewismcarey/pen/GJZVoG -->
     <div class="ticker-wrap">
       <div class="ticker">
-        <div>1. Jack Morris - $100,000</div>
-        <div>2. Wook Lee - $20,000</div>
-        <?php
-        //TODO: Load leader board from file and display top 10  
-        ?>
+          <?php
+          require __DIR__."/common.php";
+          $scores = read_leaderboard();
+          foreach ($scores as $rank => $info) {
+              echo "<div>".($rank+1).". ".$info[0]." - $".number_format((float)$info[1], 2)."</div>";
+          }
+            ?>
       </div>
     </div>
   </header>
