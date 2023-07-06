@@ -1,7 +1,9 @@
 <?php
 
 session_start();
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 // check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -9,10 +11,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
 
 
-    function pass_username($username)
-    {
-        return $username;
-    }
+
+    $checker = filter_input_array(INPUT_POST, $_COOKIE);
+    print_r(count($checker["username"]));
+
+
+
+
 
 
     if (!isset($_SESSION["users"][$username])) {
@@ -24,6 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $_SESSION["current_username"] = $username;
 
+        $cookieExpiration = time() + (30 * 24 * 60 * 60); // cookie is stored for 30 days from now
+        setcookie("username", $username, $cookieExpiration); // username is set using cookie
+        setcookie("password", $password, $cookieExpiration); // password is set using cookie
+        setcookie("auth", true, $cookieExpiration); // user authentication is set using cookie
 
         // session_start();
 
@@ -38,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // echo "</pre>";
 
 
+
         header("Location: register_success.php");
     } else {
         echo "Username already taken.";
@@ -45,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 }
+
 
 
 
