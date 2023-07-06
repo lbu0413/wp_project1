@@ -1,9 +1,6 @@
 <?php
-
-
-
 session_start();
-// signin.php
+
 
 
 // retrieve the username & password
@@ -12,36 +9,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
 
 
+    function validate_user($username, $password)
+    {
+        $userData = explode("\n", file_get_contents("./user_data/users.txt"));
+        foreach ($userData as $sub_userData) {
+            $username_password = explode(",", $sub_userData);
 
-    // checking if user's data is already in the cookie
-    // if so redirect them straight to deal.php without valid credentials check.
-    $checker = filter_input_array(INPUT_POST, $_COOKIE);
-    foreach ($checker as $check) {
-        if ($checker["username"] == $username) {
-            $_SESSION["username"] = $username;
-            $_SESSION["auth"] = true;
-            header("Location: deal.php");
-            return;
+            $valid_username = $username_password[0] === $username;
+            $valid_password = $username_password[1] === $password;
+
+            if ($valid_username && $valid_password) {
+                return true;
+            }
+
         }
+        return false;
     }
 
-
-
-
-    // check if valid credentials
-    if (isset($_SESSION["users"][$username]) && $_SESSION["users"][$username]["password"] === $password) {
-        $_SESSION["username"] = $username;
+    if (validate_user($username, $password)) {
+        setcookie("username", $username, time() + (86400 * 30), "/"); // Cookie expires in 30 days
+        setcookie("password", $password, time() + (86400 * 30), "/"); // Cookie expires in 30 days
         $_SESSION["auth"] = true;
-        echo "login successful";
-
-        // $cookieExpiration = time() + (30 * 24 * 60 * 60); // cookie is stored for 30 days from now
-        // setcookie("username", $username, $cookieExpiration); // username is set using cookie
-        // setcookie("auth", true, $cookieExpiration); // user authentication is set using cookie
-
-        // header("Location: deal.php");
+        header("Location: deal.php");
     } else {
-        echo "Invalid username or password.";
+        echo "invalid username or password, please check again";
     }
+
 
 }
 
