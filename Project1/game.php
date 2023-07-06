@@ -15,31 +15,44 @@ check_auth();
 
 <body style="flex-direction: column;">
 
-  <div class="content-body">
-    <?php
-    if (isset($_SESSION['offer']) && $_SESSION['offer'] !== 0 && $_SESSION['score'] === 0) {
-      ?>
+    <div class="content-body">
+      <div>
+        
+      <?php
+        if (isset($_SESSION['offer']) && $_SESSION['offer'] !== 0 && $_SESSION['score'] === 0) {
+            ?>
       <h2>Banker offer: $
-        <?php echo number_format($_SESSION['offer'], 2) ?>
+            <?php echo number_format($_SESSION['offer'], 2) ?>
       </h2>
       <form style="margin: auto;" action="deal.php" method="get">
         <button value="-1" name="case">Accept Offer</button>
       </form>
-      <?php
-    }
-    ?>
+            <?php
+            if ($_SESSION['counter']) {
+                ?>
+      <h2>Counter Offer:</h2>
+      <p>Only 1 use per game</p>
+      <form action="deal.php" method="POST">
+        <input type="number" name="c_offer" required match="\d+">
+        <button type="submit">Submit</button>
+      </form>
+                <?php
+            }
+        }
+        ?>
+      </div>
     <form style="margin:auto;" action="deal.php" method="get">
       <div class="cases-grid">
         <?php
         for ($i = 0; $i < 26; $i++) {
-          if ($_SESSION['opened'][$i] !== 0) {
-            echo "<div style=\"width:100%;height:100%;grid-column:" . ($i % 7 + 1) . ";\">$"
-              . number_format($_SESSION['opened'][$i], 2) .
-              "</div>";
-            continue;
-          }
-          $j = $i + 1;
-          echo
+            if ($_SESSION['opened'][$i] !== 0) {
+                echo "<div style=\"width:100%;height:100%;grid-column:" . ($i % 7 + 1) . ";\">$"
+                . number_format($_SESSION['opened'][$i], 2) .
+                "</div>";
+                continue;
+            }
+            $j = $i + 1;
+            echo
             "<button style=\"
                 width:100%;
                 height:100%;
@@ -49,8 +62,8 @@ check_auth();
                 >"
                 .$j.
                 "</button>";
-            }
-            ?>
+        }
+        ?>
         </div>
         <?php 
         if ($_SESSION['score'] !== 0) {
@@ -61,7 +74,8 @@ check_auth();
             }
             ?>
         <h2>You Won $<?php echo number_format($_SESSION['score'], 2)?>!!!</h2>
-        <button>Play Again?</button>
+        <a href="deal.php"> Play Again? </a>           
+        <a href="index.php"> Return Home? </a>
             <?php 
             $_SESSION['score'] = 0;
         }

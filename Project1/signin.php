@@ -1,13 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
 
 require __DIR__ . "/common.php";
-
-
 
 // retrieve the username & password
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -27,11 +21,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // invalid username/pass
         header("Location: signin.html");
     }
-
-
 }
-
-
-
-
 ?>

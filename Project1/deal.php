@@ -1,4 +1,17 @@
 <?php
+// get request to open briefcase
+// check if briefcase has already been opened
+// return the value and the next banker offer
+// if no cases remain after selection then set the
+//    session score to the case value
+// if banker offer accepted send all cases and set the
+//    session score to the banker offer
+// if counter offer made check if its under the max
+//    acceptable offer from the banker, if so accept and
+//    end seesion and set banker offer as session score
+//    else reject and set counter available to false
+// if only 1 case remaining after selection dont make offer
+//    or ignore offer
 session_start();
 define('NO_CASES', 26);
 require __DIR__ . "/common.php";
@@ -87,6 +100,7 @@ function get_adj_offer(): float
         max($remaining)
     );
 }
+//MAIN GAME SETUP AND LOGIC
 if (!isset($_SESSION['cases'])) {
     // set up new game
 
@@ -101,44 +115,30 @@ if (!isset($_SESSION['cases'])) {
     // );
 
     $_SESSION['cases'] = [
-        0.01,
-        1,
-        5,
-        10,
-        25,
-        50,
-        75,
-        100,
-        200,
-        300,
-        400,
-        500,
-        750,
-        1000,
-        5000,
-        10000,
-        25000,
-        50000,
-        75000,
-        100000,
-        200000,
-        300000,
-        400000,
-        500000,
-        750000,
-        1000000,
+        0.01, 1, 5, 10, 25,50,75, 100,
+        200, 300, 400, 500, 750, 1000,
+        5000, 10000, 25000, 50000, 75000,
+        100000, 200000, 300000, 400000,
+        500000, 750000, 1000000,
     ];
     shuffle($_SESSION['cases']);
     $_SESSION['opened'] = array_fill(0, NO_CASES, 0);
-    $_SESSION['counter'] = 0;
-    $_SESSION['counter_offer'] = -1;
+    $_SESSION['counter'] = true;
     $_SESSION['score'] = 0;
     $_SESSION['no_left'] = NO_CASES;
     $_SESSION['offer'] = 0;
 
-} elseif (!isset($_GET['case'])) {
-    //pass
-} else {
+} elseif ($_SESSION['counter'] && isset($_POST['c_offer']) && is_numeric($_POST['c_offer'])) {
+    error_log(print_r($_GET, true));
+    // counter === 1 if counter available and used 
+    // counter === 2 if counter unavailable
+    $_SESSION['counter'] = false;
+
+    if ($_POST['c_offer'] < get_offer() ) {
+        // open all cases and submit final score 
+        $_SESSION['score'] = (float)$_POST['c_offer'];
+    }
+} elseif (isset($_GET['case'])) {
     // check if selected case is valid or if counter offer made
     $case_no = $_GET['case'];
 
@@ -150,48 +150,22 @@ if (!isset($_SESSION['cases'])) {
             $_SESSION['opened'][$case_no] = $value;
             $_SESSION['no_left']--;
             if ($_SESSION['no_left'] === 1) {
-                $_SESSION['score'] = get_remaining()[0]; // get last unopen case
+                $_SESSION['score'] = get_remaining()[0]; // get final unopened case
                 // TODO: add session variable or get to get big reveal for last case
             } else {
                 $_SESSION['offer'] = get_adj_offer();
             }
-
-        } elseif ($_SESSION['counter'] === 1) {
-            // counter === 0 if counter available and unused
-            // counter === 1 if counter available and used 
-            // counter === 2 if counter unavailable
-            $_SESSION['counter']++;
-
-            if ($_SESSION['counter_offer'] < get_offer() * 1.1) {
-                // open all cases and submit final score 
-                $_SESSION['score'] = $_SESSION['counter_offer'];
-            }
-        }
+        } 
     } elseif ($case_no == -1) {
         // offer accepted end game
         $_SESSION['score'] = $_SESSION['offer'];
     }
-    if ($_SESSION['score'] !== 0) {
+}
+if ($_SESSION['score'] !== 0) {
         open_all_cases();
         unset($_SESSION['cases']);
-    }
 }
-// error_log(print_r($_GET['case'], true));
-// get request to open briefcase
-// check if briefcase has already been opened
-// return the value and the next banker offer
-// if no cases remain after selection then set the
-//    session score to the case value
-// if banker offer accepted send all cases and set the
-//    session score to the banker offer
-// if counter offer made check if its under the max
-//    acceptable offer from the banker, if so accept and
-//    end seesion and set banker offer as session score
-//    else reject and set counter available to false
-// if only 1 case remaining after selection dont make offer
-//    or ignore offer
 
 // Reload the game board with the updated gamestate
 header("Location: game.php");
 ?>
-
