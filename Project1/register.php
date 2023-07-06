@@ -1,6 +1,4 @@
 <?php
-
-session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -12,47 +10,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 
-    $checker = filter_input_array(INPUT_POST, $_COOKIE);
-    print_r(count($checker["username"]));
+    function existing_user($username)
+    {
+        $userInfo = explode("\n", file_get_contents("./user_data/users.txt"));
+        foreach ($userInfo as $sub_user_info) {
+            $name_password = explode(",", $sub_user_info);
+            if ($name_password[0] == $username) {
+                return true; // existing user
+            }
 
-
-
-
-
-
-    if (!isset($_SESSION["users"][$username])) {
-        // store the user data in the session array
-        $_SESSION["users"][$username] = array(
-            "username" => $username,
-            "password" => $password
-        );
-
-        $_SESSION["current_username"] = $username;
-
-        $cookieExpiration = time() + (30 * 24 * 60 * 60); // cookie is stored for 30 days from now
-        setcookie("username", $username, $cookieExpiration); // username is set using cookie
-        setcookie("password", $password, $cookieExpiration); // password is set using cookie
-        setcookie("auth", true, $cookieExpiration); // user authentication is set using cookie
-
-        // session_start();
-
-        // // Clear all session variables
-        // session_unset();
-
-        // // Destroy the session
-        // session_destroy();
-
-        // echo "<pre>";
-        // print_r($_SESSION);
-        // echo "</pre>";
-
-
-
-        header("Location: register_success.php");
-    } else {
-        echo "Username already taken.";
+        }
+        return false; // new user
     }
 
+    if (existing_user($username)) {
+        echo "Username already exists";
+    } else {
+        // write user data to users.txt
+        $userdata = $username . "," . $password;
+        file_put_contents("./user_data/users.txt", "\n" . $userdata, FILE_APPEND);
+
+
+        // redirect to register_success.php with the username as a query parameter
+        header("Location: register_success.php?username=" . urlencode($username));
+    }
 
 }
 
