@@ -21,8 +21,6 @@ require __DIR__ . "/common.php";
  * 
  * @return void 
  */
-// TODO: add session variable or get to get big reveal for last case
-
 function update_game_state()
 {
     if ($_SESSION['gamestate']->counter && isset($_POST['c_offer']) && is_numeric($_POST['c_offer'])) {

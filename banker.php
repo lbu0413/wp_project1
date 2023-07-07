@@ -32,7 +32,7 @@ class Banker
      *
      * @return float sqrt of mean of squares
      */
-    private function get_offer(array $remaining = null): float
+    public function get_offer(array $remaining = null): float
     {
         if ($remaining === null) {
             $remaining = $this->game_state->get_remaining();

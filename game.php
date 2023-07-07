@@ -29,27 +29,23 @@ check_auth();
         ?> 
 
     </div>
-<table class = "low">
-<td>$0.01</td>
-  <td>$1</td>
-  <td>$5</td>
-  <td>$10</td>
-  <td>$25</td>
-  <td>$50</td>
-  <td>$75</td>
-  <td>$100</td>
-  <td>$200</td>
-  <td>$300</td>
-  <td>$400</td>
-  <td>$500</td>
-  <td>$750</td>
-
-
-
+      <table class = "low">
+        <td>$0.01</td>
+        <td>$1</td>
+        <td>$5</td>
+        <td>$10</td>
+        <td>$25</td>
+        <td>$50</td>
+        <td>$75</td>
+        <td>$100</td>
+        <td>$200</td>
+        <td>$300</td>
+        <td>$400</td>
+        <td>$500</td>
+        <td>$750</td>
       </table>
 
       <table class = "high">
-
         <td>$1,000</td>
         <td>$5,000</td>
         <td>$10,000</td>
@@ -63,7 +59,6 @@ check_auth();
         <td>$500,000</td>
         <td>$750,000</td>
         <td>$1,000,000</td>
-
       </table>
 
 </body>
