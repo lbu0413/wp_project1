@@ -12,9 +12,11 @@
 //    else reject and set counter available to false
 // if only 1 case remaining after selection dont make offer
 //    or ignore offer
+require __DIR__."/autoloader.php";
+cfg_autoloader();
 session_start();
-define('NO_CASES', 26);
 require __DIR__ . "/common.php";
+
 
 if (!isset($_SESSION['username'])) {
     // all your highscore are belong to me
@@ -22,152 +24,24 @@ if (!isset($_SESSION['username'])) {
 }
 // check for session authentication
 check_auth();
-/**
- *  Opens all cases 
- *
- * @return null 
- */
-function open_all_cases()
+// check if new session
+if (!isset($_SESSION['gamestate'])) {
+    $_SESSION['gamestate'] = new GameState();
+    $_SESSION['banker'] = new Banker($_SESSION['gamestate']);
+} 
+// check if game over and is being reset
+if (!isset($_SESSION['banker']) && isset($_SESSION['gamestate'])) {
+    $_SESSION['gamestate']->reset();
+    $_SESSION['banker'] = new Banker($_SESSION['gamestate']);
+} 
+// update gamestate with player action
+else 
 {
-    for ($j = 0; $j < NO_CASES; $j++) {
-        $_SESSION['opened'] = $_SESSION['cases'];
+    $game_complete = update_game_state();
+    if ($game_complete) {
+        unset($_SESSION['banker']);
     }
 }
-/** 
- * get sum of squares 
- *
- * @return float 
- */
-function sum_squares($carry, $item): float
-{
-    return $carry + ($item * $item);
-}
-/**
- * glorified not operator
- *
- * @return null
- */
-function filter_opposite($value): bool
-{
-    return (bool) (!$value);
-}
-/** 
- * get all unopened cases
- *
- * @return array of unopened cases
- */
-function get_remaining(): array
-{
-    return array_keys(
-        array_filter(
-            array_combine(
-                $_SESSION['cases'],
-                $_SESSION['opened']
-            ),
-            "filter_opposite"
-        )
-    );
-}
-/** 
- * Get banker un adjusted offer
- *
- * @return float sqrt of mean of squares
- */
-function get_offer(array $remaining = null): float
-{
-    if ($remaining === null) {
-        $remaining = get_remaining();
-    }
-    $offer = array_reduce($remaining, "sum_squares") / count($remaining);
-    return sqrt($offer);
-}
-/**
- * Adjust banker offer by factor proportional to how many cases remain unopened
- *
- * @return float banker offer 
- */
-function get_adj_offer(): float
-{
-    $remaining = get_remaining();
-    if (count($remaining) === 0) {
-        return 0;
-    }
-    // never offer more than the final remaining case
-    return min(
-        get_offer($remaining) * pow(1 - $_SESSION['no_left'] / NO_CASES, 2),
-        max($remaining)
-    );
-}
-//MAIN GAME SETUP AND LOGIC
-if (!isset($_SESSION['cases'])) {
-    // set up new game
-
-    // session_register(
-    //     'cases', // hidden values inside of cases
-    //     'opened', // values of cases which are open and visible to player
-    //     'offer', // banker offer for current turn
-    //     'counter', // tracks counter offer availability
-    //     'score', //final score - set to 0 to indicate ongoing game
-    //     'prev' // track action on previous turn
-    // );
-
-    $_SESSION['cases'] = [
-        0.01, 1, 5, 10, 25,50,75, 100,
-        200, 300, 400, 500, 750, 1000,
-        5000, 10000, 25000, 50000, 75000,
-        100000, 200000, 300000, 400000,
-        500000, 750000, 1000000,
-    ];
-    shuffle($_SESSION['cases']);
-    $_SESSION['opened'] = array_fill(0, NO_CASES, 0);
-    $_SESSION['counter'] = true;
-    $_SESSION['score'] = 0;
-    $_SESSION['no_left'] = NO_CASES;
-    $_SESSION['offer'] = 0;
-  
-  
-
-} elseif ($_SESSION['counter'] && isset($_POST['c_offer']) && is_numeric($_POST['c_offer'])) {
-    $_SESSION['counter'] = false;
-
-    if ((float)$_POST['c_offer'] < get_offer() ) {
-        // open all cases and submit final score 
-        $_SESSION['score'] = (float)$_POST['c_offer'];
-    }
-} elseif (isset($_GET['case'])) {
-    // check if selected case is valid or if counter offer made
-    $case_no = $_GET['case'];
-
-    if ($case_no >= 0 && $case_no < NO_CASES) {
-        $value = $_SESSION['cases'][$case_no];
-        if (!$_SESSION['opened'][$case_no]) {
-            // on the game screen if the case number is 0
-            // show a closed case otherwise display the value
-            $offer_rounds = array_flip([20,15,11,8]);
-            $_SESSION['opened'][$case_no] = $value;
-            $_SESSION['no_left']--;
-            if ($_SESSION['no_left'] === 1) {
-                // end game on final round
-                $_SESSION['score'] = get_remaining()[0]; // get final unopened case
-                // TODO: add session variable or get to get big reveal for last case
-            } elseif ($_SESSION['no_left'] <= 6 || array_key_exists($_SESSION['no_left'], $offer_rounds)) {
-                // make offer on certain rounds
-                $_SESSION['offer'] = get_adj_offer();
-            } else {
-                // remove unaccepted offers
-                $_SESSION['offer'] = 0;
-            }
-        } 
-    } elseif ($case_no == -1) {
-        // offer accepted end game
-        $_SESSION['score'] = $_SESSION['offer'];
-    }
-}
-if ($_SESSION['score'] !== 0) {
-        open_all_cases();
-        unset($_SESSION['cases']);
-}
-
 // Reload the game board with the updated gamestate
 header("Location: game.php");
 ?>

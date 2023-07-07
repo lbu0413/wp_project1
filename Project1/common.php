@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * Check that session is authenticated
  *
@@ -8,9 +10,49 @@ function check_auth()
 {
     // redirect to login page if no authentication from login
     if (!isset($_SESSION['auth']) || !$_SESSION['auth']) {
-        header("Location: signin.html");
+        header("Location: cookie_check.php");
     } 
 }
+function update_game_state()
+{
+    if ($_SESSION['gamestate']->counter && isset($_POST['c_offer']) && is_numeric($_POST['c_offer'])) {
+        $_SESSION['gamestate']->counter = false;
+
+        if ((float)$_POST['c_offer'] < $_SESSION['banker']->get_offer() ) {
+            // open all cases and submit final score 
+            $_SESSION['gamestate']->score = (float)$_POST['c_offer'];
+        }
+    } elseif (isset($_GET['case'])) {
+        // check if selected case is valid or if counter offer made
+        $case_no = $_GET['case'];
+
+        if ($case_no >= 0 && $case_no < GameState::NO_CASES) {
+            if (!$_SESSION['gamestate']->opened[$case_no]) {
+                $_SESSION['gamestate']->open_case($case_no);
+                if ($_SESSION['gamestate']->no_left === 1) {
+                    // end game on final round
+                    $_SESSION['gamestate']->score = $_SESSION['gamestate']->get_remaining()[0]; // get final unopened case
+                    // TODO: add session variable or get to get big reveal for last case
+                } elseif ($_SESSION['gamestate']->no_left <= 6 || array_key_exists($_SESSION['gamestate']->no_left, GameState::OFFER_ROUNDS)) {
+                    // make offer on certain rounds
+                    $_SESSION['banker']->update_adj_offer();
+                } else {
+                    // remove unaccepted offers
+                    $_SESSION['banker']->reject_offer();
+                }
+            } 
+        } elseif ($case_no == -1) {
+            // offer accepted end game
+            $_SESSION['gamestate']->score = $_SESSION['banker']->offer;
+        }
+    }
+    if ($_SESSION['gamestate']->score) {
+        $_SESSION['gamestate']->open_all_cases();
+        return true;
+    }
+        return false;
+}
+
 /**
  * Get the ordinal suffix for integer value 
  *
@@ -114,13 +156,13 @@ function update_leaderboard():int
     $leaderboard = read_leaderboard();
     $new_hs = 0;
     if (! count($leaderboard)) {
-        array_push($leaderboard, array($_SESSION['username'], $_SESSION['score']));
+        array_push($leaderboard, array($_SESSION['username'], $_SESSION['gamestate']->score));
         $new_hs++;
     } else {
         for ($i = 0; $i < 10 ; $i++) {
             // add to leaderboard if slot is empty or less than score
-            if (! $leaderboard[$i] || (float)$leaderboard[$i][1] < $_SESSION['score']) {
-                array_splice($leaderboard, $i, 0, [ [$_SESSION['username'], $_SESSION['score']] ]);
+            if (! $leaderboard[$i] || (float)$leaderboard[$i][1] < $_SESSION['gamestate']->score) {
+                array_splice($leaderboard, $i, 0, [ [$_SESSION['username'], $_SESSION['gamestate']->score] ]);
                 $new_hs = $i+1;
                 break;
             }
@@ -130,7 +172,6 @@ function update_leaderboard():int
             array_pop($leaderboard);
         }
     }
-  
     
     write_leaderboard($leaderboard);
     return $new_hs;
