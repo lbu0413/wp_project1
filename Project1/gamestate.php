@@ -78,6 +78,10 @@ class GameState
     {
         $this->keep = $case;
     }
+    public function check_openable(int $case):bool
+    {
+        return (!$this->opened[$case] && ($this->keep !== $case || $this->no_left === 2));
+    }
 }
 
 

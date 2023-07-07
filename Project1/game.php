@@ -2,7 +2,7 @@
 
 require __DIR__."/gamestate.php";
 require __DIR__."/banker.php";
-
+require __DIR__."/game_text.php";
 session_start();
 require __DIR__."/common.php";
 
