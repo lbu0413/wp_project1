@@ -18,7 +18,12 @@ check_auth();
     <div class="content-body">
       <div>
         
-      <?php
+        <?php
+        // if offer is declined remove offer
+        if (isset($_GET['offer']) && $_GET['offer'] == -1) {
+            $_SESSION['offer'] = 0;
+        }
+        // if offer available load offer options
         if (isset($_SESSION['offer']) && $_SESSION['offer'] !== 0 && $_SESSION['score'] === 0) {
             ?>
       <h2>Banker offer: $
@@ -26,6 +31,9 @@ check_auth();
       </h2>
       <form style="margin: auto;" action="deal.php" method="get">
         <button value="-1" name="case">Accept Offer</button>
+      </form>
+      <form style="margin: auto;" action="game.php" method="get">
+        <button value="-1" name="offer">Decline Offer</button>
       </form>
             <?php
             if ($_SESSION['counter']) {
@@ -38,22 +46,23 @@ check_auth();
       </form>
                 <?php
             }
-        }
-        ?>
+        } else {
+            // load grid of cases
+            ?>
       </div>
     <form style="margin:auto;" action="deal.php" method="get">
       <div class="cases-grid">
-        <?php
-        for ($i = 0; $i < 26; $i++) {
-            if ($_SESSION['opened'][$i] !== 0) {
-                echo "<div style=\"width:100%;height:100%;grid-column:" . ($i % 7 + 1) . ";\">$"
-                . number_format($_SESSION['opened'][$i], 2) .
-                "</div>";
-                continue;
-            }
-            $j = $i + 1;
-            echo
-            "<button style=\"
+            <?php
+            for ($i = 0; $i < 26; $i++) {
+                if ($_SESSION['opened'][$i] !== 0) {
+                    echo "<div style=\"width:100%;height:100%;grid-column:" . ($i % 7 + 1) . ";\">$"
+                    . number_format($_SESSION['opened'][$i], 2) .
+                    "</div>";
+                    continue;
+                }
+                $j = $i + 1;
+                echo
+                "<button style=\"
                 width:100%;
                 height:100%;
                 grid-column:" . ($i % 7 + 1) . ";\" 
@@ -62,10 +71,12 @@ check_auth();
                 >"
                 .$j.
                 "</button>";
-        }
-        ?>
+            }
+            ?>
         </div>
-        <?php 
+            <?php 
+        }
+        // if game is completed show result
         if ($_SESSION['score'] !== 0) {
             $res = update_leaderboard();
             if ($res) {
