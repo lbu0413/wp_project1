@@ -121,23 +121,19 @@ function update_leaderboard():int
 {
     $leaderboard = read_leaderboard();
     $new_hs = 0;
-    if (! count($leaderboard)) {
-        array_push($leaderboard, array($_SESSION['username'], $_SESSION['gamestate']->score));
-        $new_hs++;
-    } else {
-        for ($i = 0; $i < 10 ; $i++) {
-            // add to leaderboard if slot is empty or less than score
-            if (! $leaderboard[$i] || (float)$leaderboard[$i][1] < $_SESSION['gamestate']->score) {
+    for ($i = 0; $i < 10 ; $i++) {
+        // add to leaderboard if slot is empty or less than score
+        if (! $leaderboard[$i] || (float)$leaderboard[$i][1] < $_SESSION['gamestate']->score) {
                 array_splice($leaderboard, $i, 0, [ [$_SESSION['username'], $_SESSION['gamestate']->score] ]);
                 $new_hs = $i+1;
                 break;
-            }
-        }
-        // only keep top 10 in leaderboard
-        while (count($leaderboard) > 10) {
-            array_pop($leaderboard);
         }
     }
+        // only keep top 10 in leaderboard
+    while (count($leaderboard) > 10) {
+        array_pop($leaderboard);
+    }
+    
     
     write_leaderboard($leaderboard);
     return $new_hs;
