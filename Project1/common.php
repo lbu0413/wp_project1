@@ -62,27 +62,27 @@ function update_game_state()
  */
 function ordinal(int $number):string
 {
-    if (phpversion('tidy')[0] === '7') {
-        if ($number === 1) {
-            return "1st";
-        }
-        elseif ($number === 2) {
-            return "2nd";
-        }
-        elseif ($number === 3) {
-            return "3rd";
-        }
-        else
-        {
-            return $number."th";
-        }
+    // if (phpversion('tidy')[0] === '7') {
+    if ($number === 1) {
+        return "1st";
     }
-    return match($number) {
-        1 => "1st",
-        2 => "2nd",
-        3 => "3rd",
-        default => $number."th"
-    };
+    elseif ($number === 2) {
+        return "2nd";
+    }
+    elseif ($number === 3) {
+        return "3rd";
+    }
+    else
+        {
+        return $number."th";
+    }
+    // }
+    // return match($number) {
+    //     1 => "1st",
+    //     2 => "2nd",
+    //     3 => "3rd",
+    //     default => $number."th"
+    // };
 }
 /** 
  * Convert array of strings into associative array of arrays 
