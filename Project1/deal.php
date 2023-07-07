@@ -109,7 +109,6 @@ if (!isset($_SESSION['cases'])) {
     //     'opened', // values of cases which are open and visible to player
     //     'offer', // banker offer for current turn
     //     'counter', // tracks counter offer availability
-    //     'counter_offer', // the amount counter offered by player
     //     'score', //final score - set to 0 to indicate ongoing game
     //     'prev' // track action on previous turn
     // );
@@ -127,14 +126,13 @@ if (!isset($_SESSION['cases'])) {
     $_SESSION['score'] = 0;
     $_SESSION['no_left'] = NO_CASES;
     $_SESSION['offer'] = 0;
+  
+  
 
 } elseif ($_SESSION['counter'] && isset($_POST['c_offer']) && is_numeric($_POST['c_offer'])) {
-    error_log(print_r($_GET, true));
-    // counter === 1 if counter available and used 
-    // counter === 2 if counter unavailable
     $_SESSION['counter'] = false;
 
-    if ($_POST['c_offer'] < get_offer() ) {
+    if ((float)$_POST['c_offer'] < get_offer() ) {
         // open all cases and submit final score 
         $_SESSION['score'] = (float)$_POST['c_offer'];
     }
@@ -147,13 +145,19 @@ if (!isset($_SESSION['cases'])) {
         if (!$_SESSION['opened'][$case_no]) {
             // on the game screen if the case number is 0
             // show a closed case otherwise display the value
+            $offer_rounds = array_flip([20,15,11,8]);
             $_SESSION['opened'][$case_no] = $value;
             $_SESSION['no_left']--;
             if ($_SESSION['no_left'] === 1) {
+                // end game on final round
                 $_SESSION['score'] = get_remaining()[0]; // get final unopened case
                 // TODO: add session variable or get to get big reveal for last case
-            } else {
+            } elseif ($_SESSION['no_left'] <= 6 || array_key_exists($_SESSION['no_left'], $offer_rounds)) {
+                // make offer on certain rounds
                 $_SESSION['offer'] = get_adj_offer();
+            } else {
+                // remove unaccepted offers
+                $_SESSION['offer'] = 0;
             }
         } 
     } elseif ($case_no == -1) {

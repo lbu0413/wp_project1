@@ -50,7 +50,6 @@ function read_into_associative(array $data):array
         $out[$i] = array($keys[$i], $values[$i]);
     }
     unset($keys, $values);
-    $_SESSION['leaderboard'] = $out;
     return $out;
 }
 /**
