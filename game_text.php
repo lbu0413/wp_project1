@@ -35,7 +35,12 @@ function generate_game_over()
         $res = update_leaderboard();
         if ($res) {
             $str_res = ordinal($res);
-            echo "<h2>You got a new $str_res place highscore!</h2>";
+            echo "<h2>You got the new $str_res place global highscore!</h2>";
+        }
+        $l_res = update_local_leaderboard();
+        if ($l_res) {
+            $l_str_res = ordinal($l_res);
+            echo "<h2>You got a new $l_str_res place local highscore!</h2>";
         }
         ?>
         <h2>You Won $<?php echo number_format($_SESSION['gamestate']->score, 2)?>!!</h2>

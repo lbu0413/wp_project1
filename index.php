@@ -19,8 +19,14 @@
       <div class="ticker">
           <?php
           require __DIR__."/common.php";
+          echo "<div> GLOBAL HIGHSCORES </div>";
           $scores = read_leaderboard();
           foreach ($scores as $rank => $info) {
+              echo "<div>".($rank+1).". ".$info[0]." - $".number_format((float)$info[1], 2)."</div>";
+          }
+          $l_scores = read_local_leaderboard();
+          echo "<div> LOCAL HIGHSCORES </div>";
+          foreach ($l_scores as $rank => $info) {
               echo "<div>".($rank+1).". ".$info[0]." - $".number_format((float)$info[1], 2)."</div>";
           }
             ?>
