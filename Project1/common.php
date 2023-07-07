@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Check that session is authenticated
  *
@@ -13,6 +12,13 @@ function check_auth()
         header("Location: cookie_check.php");
     } 
 }
+/**
+ * update the game state based on player input 
+ * 
+ * @return void 
+ */
+// TODO: add session variable or get to get big reveal for last case
+
 function update_game_state()
 {
     if ($_SESSION['gamestate']->counter && isset($_POST['c_offer']) && is_numeric($_POST['c_offer'])) {
@@ -28,18 +34,23 @@ function update_game_state()
 
         if ($case_no >= 0 && $case_no < GameState::NO_CASES) {
             // select case to keep on first round
-            if (!isset($_SESSION['gamestate']->keep)) {
+            if ($_SESSION['gamestate']->keep === -1) {
                 $_SESSION['gamestate']->keep_case($case_no);
             }
             // Select case to open 
             elseif (!$_SESSION['gamestate']->opened[$case_no]) {
-                    $_SESSION['gamestate']->open_case($case_no);
+                $_SESSION['gamestate']->open_case($case_no);
+                // end game on final round
                 if ($_SESSION['gamestate']->no_left === 1) {
-                    // end game on final round
                     // get final unopened case
+                    $_SESSION['gamestate']->score = $_SESSION['gamestate']->get_remaining()[0];
 
-                    $_SESSION['gamestate']->score = $_SESSION['gamestate']->get_remaining()[0];                     // TODO: add session variable or get to get big reveal for last case
-                } elseif ($_SESSION['gamestate']->no_left <= 6 || array_key_exists($_SESSION['gamestate']->no_left, GameState::OFFER_ROUNDS)) {
+                } elseif ($_SESSION['gamestate']->no_left <= 6  
+                    || array_key_exists(
+                        $_SESSION['gamestate']->no_left,
+                        GameState::OFFER_ROUNDS
+                    )
+                ) {
                     // make offer on certain rounds
                     $_SESSION['banker']->update_adj_offer();
                 } else {
@@ -47,7 +58,6 @@ function update_game_state()
                     $_SESSION['banker']->reject_offer();
                 }
             }
-            
         } elseif ($case_no == -1) {
             // offer accepted end game
             $_SESSION['gamestate']->score = $_SESSION['banker']->offer;
@@ -57,11 +67,19 @@ function update_game_state()
         $_SESSION['gamestate']->open_all_cases();
     }
 }
+/**
+ * Generate a button for a given case 
+ *
+ * @param  $i the case number (zero indexed)
+ * @return void
+ */
 function generate_case_button(int $i)
 {
     $offer_round = "";
     if ($_SESSION['banker']->offer 
-        || (isset($_SESSION['gamestate']->keep) && $i === $_SESSION['gamestate']->keep && $_SESSION['gamestate']->no_left > 2)
+        || ( $_SESSION['gamestate']->keep!==-1 
+        && $i === $_SESSION['gamestate']->keep 
+        && $_SESSION['gamestate']->no_left > 2 )
     ) {
         $offer_round = "disabled";
     }
@@ -73,9 +91,37 @@ function generate_case_button(int $i)
     echo $i+1;
     echo "</button>";
 }
+/**
+ * Display game over info and leaderboard position if applicable
+ *
+ * @return void
+ */
+function generate_game_over()
+{
+    // if game is completed show result
+    if ($_SESSION['gamestate']->score) {
+        $res = update_leaderboard();
+        if ($res) {
+            $str_res = ordinal($res);
+            echo "<h2>You got a new $str_res place highscore!</h2>";
+        }
+        ?>
+        <h2>You Won $<?php echo number_format($_SESSION['gamestate']->score, 2)?>!!</h2>
+        <a href="deal.php"> Play Again? </a>|<a href="index.php"> Return Home? </a>
+        <?php 
+        $_SESSION['gamestate']->reset();
+        $_SESSION['banker']->reject_offer();
+    }
+}
+/**
+ * create html grid layout for briefcases
+ * and the game over screen if required
+ *
+ * @return void 
+ */
 function generate_case_grid()
 {
-    if (!isset($_SESSION['gamestate']->keep)) {
+    if ($_SESSION['gamestate']->keep===-1) {
         echo "<h2> Select your case to keep </h2>";
     }
     ?>
@@ -93,26 +139,16 @@ function generate_case_grid()
             }
             ?>
         </div>
-    <?php 
-    // if game is completed show result
-    if ($_SESSION['gamestate']->score) {
-        $res = update_leaderboard();
-        if ($res) {
-            $str_res = ordinal($res);
-            echo "<h2>You got a new $str_res place highscore!</h2>";
-        }
-        ?>
-        <h2>You Won $<?php echo number_format($_SESSION['gamestate']->score, 2)?>!!!</h2>
-        <a href="deal.php"> Play Again? </a>|
-        <a href="index.php"> Return Home? </a>
-        <?php 
-        $_SESSION['gamestate']->reset();
-        $_SESSION['banker']->reject_offer();
-    }
-    ?>
+    <?php generate_game_over(); ?>
 </form>
     <?php
 }
+/**
+ * generate panel to display banker offer 
+ * and counter offer if available 
+ *
+ * @return void 
+ */
 function generate_offer_panel()
 {
     ?>

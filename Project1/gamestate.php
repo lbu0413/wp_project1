@@ -31,6 +31,7 @@ class GameState
         $this->counter = true;
         $this->score = 0;
         $this->no_left = self::NO_CASES;
+        $this->keep = -1;
 
     }
     public function __get($name)
