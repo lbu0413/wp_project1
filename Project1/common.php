@@ -27,8 +27,13 @@ function update_game_state()
         $case_no = $_GET['case'];
 
         if ($case_no >= 0 && $case_no < GameState::NO_CASES) {
-            if (!$_SESSION['gamestate']->opened[$case_no]) {
-                $_SESSION['gamestate']->open_case($case_no);
+            // select case to keep on first round
+            if (!isset($_SESSION['gamestate']->keep)) {
+                $_SESSION['gamestate']->keep_case($case_no);
+            }
+            // Select case to open 
+            elseif (!$_SESSION['gamestate']->opened[$case_no]) {
+                    $_SESSION['gamestate']->open_case($case_no);
                 if ($_SESSION['gamestate']->no_left === 1) {
                     // end game on final round
                     // get final unopened case
@@ -41,7 +46,8 @@ function update_game_state()
                     // remove unaccepted offers
                     $_SESSION['banker']->reject_offer();
                 }
-            } 
+            }
+            
         } elseif ($case_no == -1) {
             // offer accepted end game
             $_SESSION['gamestate']->score = $_SESSION['banker']->offer;
@@ -49,11 +55,102 @@ function update_game_state()
     }
     if ($_SESSION['gamestate']->score) {
         $_SESSION['gamestate']->open_all_cases();
-        return true;
     }
-        return false;
 }
+function generate_case_button(int $i)
+{
+    $offer_round = "";
+    if ($_SESSION['banker']->offer 
+        || (isset($_SESSION['gamestate']->keep) && $i === $_SESSION['gamestate']->keep && $_SESSION['gamestate']->no_left > 2)
+    ) {
+        $offer_round = "disabled";
+    }
 
+    echo "<button style=\"width:100%;height:100%;grid-column:";
+    echo ($i % 7 + 1) . ";\" name=\"case\"";
+    echo "value=\"$i\"";
+    echo $offer_round.">";
+    echo $i+1;
+    echo "</button>";
+}
+function generate_case_grid()
+{
+    if (!isset($_SESSION['gamestate']->keep)) {
+        echo "<h2> Select your case to keep </h2>";
+    }
+    ?>
+<form style="margin:auto;" action="deal.php" method="get">
+      <div class="cases-grid">
+            <?php
+            for ($i = 0; $i < 26; $i++) {
+                if ($_SESSION['gamestate']->opened[$i]) {
+                    echo "<div style=\"width:100%;height:100%;grid-column:" . ($i % 7 + 1) . ";\">$"
+                    . number_format($_SESSION['gamestate']->opened[$i], 2) .
+                    "</div>";
+                    continue;
+                }
+                generate_case_button($i);
+            }
+            ?>
+        </div>
+    <?php 
+    // if game is completed show result
+    if ($_SESSION['gamestate']->score) {
+        $res = update_leaderboard();
+        if ($res) {
+            $str_res = ordinal($res);
+            echo "<h2>You got a new $str_res place highscore!</h2>";
+        }
+        ?>
+        <h2>You Won $<?php echo number_format($_SESSION['gamestate']->score, 2)?>!!!</h2>
+        <a href="deal.php"> Play Again? </a>|
+        <a href="index.php"> Return Home? </a>
+        <?php 
+        $_SESSION['gamestate']->reset();
+        $_SESSION['banker']->reject_offer();
+    }
+    ?>
+</form>
+    <?php
+}
+function generate_offer_panel()
+{
+    ?>
+    <div>
+ 
+        <?php
+        // if offer is declined remove offer
+        if (isset($_GET['offer']) && $_GET['offer'] == -1) {
+            $_SESSION['banker']->reject_offer();
+        }
+        // if offer available load offer options
+        if (isset($_SESSION['banker']) && $_SESSION['banker']->offer && !$_SESSION['gamestate']->score) {
+            ?>
+      <h2>Banker offer: $
+            <?php echo number_format($_SESSION['banker']->offer, 2) ?>
+      </h2>
+      <form style="margin: auto;" action="deal.php" method="get">
+        <button value="-1" name="case">Accept Offer</button>
+      </form>
+      <form style="margin: auto;" action="game.php" method="get">
+        <button value="-1" name="offer">Decline Offer</button>
+      </form>
+            <?php
+            if ($_SESSION['gamestate']->counter) {
+                ?>
+      <h2>Counter Offer:</h2>
+      <p>Only 1 use per game</p>
+      <form action="deal.php" method="POST">
+        <input type="number" name="c_offer" required match="\d+">
+        <button type="submit">Submit</button>
+      </form>
+                <?php
+            }
+        } 
+        ?>
+      </div>
+    <?php
+}
 /**
  * Get the ordinal suffix for integer value 
  *
@@ -62,7 +159,6 @@ function update_game_state()
  */
 function ordinal(int $number):string
 {
-    // if (phpversion('tidy')[0] === '7') {
     if ($number === 1) {
         return "1st";
     }
@@ -72,17 +168,9 @@ function ordinal(int $number):string
     elseif ($number === 3) {
         return "3rd";
     }
-    else
-        {
+    else {
         return $number."th";
     }
-    // }
-    // return match($number) {
-    //     1 => "1st",
-    //     2 => "2nd",
-    //     3 => "3rd",
-    //     default => $number."th"
-    // };
 }
 /** 
  * Convert array of strings into associative array of arrays 

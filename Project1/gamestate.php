@@ -4,9 +4,11 @@ class GameState
 {
     private $cases;
     private $opened;
+    private $no_left;
+
     public $counter;
     public $score;
-    private $no_left;
+    public $keep;
 
     const NO_CASES = 26;
     const OFFER_ROUNDS = [20=>0,15=>0,11=>0,8=>0];
@@ -20,11 +22,7 @@ class GameState
         100000, 200000, 300000, 400000,
         500000, 750000, 1000000,
         ];
-        shuffle($this->cases);
-        $this->opened = array_fill(0, self::NO_CASES, 0);
-        $this->counter = true;
-        $this->score = 0;
-        $this->no_left = self::NO_CASES;
+        $this->reset();
     }
     public function reset():void
     {
@@ -74,6 +72,10 @@ class GameState
     {
         $this->opened[$case] = $this->cases[$case];
         $this->no_left--;
+    }
+    public function keep_case(int $case)
+    {
+        $this->keep = $case;
     }
 }
 

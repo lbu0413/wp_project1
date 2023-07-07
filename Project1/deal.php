@@ -27,20 +27,14 @@ check_auth();
 // check if new session
 if (!isset($_SESSION['gamestate'])) {
     $_SESSION['gamestate'] = new GameState();
-    $_SESSION['banker'] = new Banker($_SESSION['gamestate']);
 } 
 // check if game over and is being reset
 if (!isset($_SESSION['banker']) && isset($_SESSION['gamestate'])) {
-    $_SESSION['gamestate']->reset();
     $_SESSION['banker'] = new Banker($_SESSION['gamestate']);
 } 
 // update gamestate with player action
-else 
-{
-    $game_complete = update_game_state();
-    if ($game_complete) {
-        unset($_SESSION['banker']);
-    }
+else {
+     update_game_state();
 }
 // Reload the game board with the updated gamestate
 header("Location: game.php");
