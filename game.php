@@ -18,7 +18,9 @@ check_auth();
 </head>
 
 <body style="flex-direction: column;">
-
+<div style="position: fixed;top: 0;left: 0;">
+  <a href="logout.php">Log out</a>
+</div>
     <div class="content-body">
 
       <?php
