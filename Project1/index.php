@@ -36,10 +36,6 @@
         <div class="card-back inner-outline">
           <div>
             <p>
-              <!--
-                  Maybe add a cookie here to
-                  detect returning users or use session tokens
-                -->
               <a href="./cookie_check.php">Returning player?</a>
               <br><br>
               <a href="./register.html">First time?</a>
