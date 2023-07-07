@@ -15,8 +15,13 @@ function generate_case_button(int $i)
     ) {
         $offer_round = "disabled";
     }
-
-    echo "<button style=\"width:100%;height:100%;grid-column:";
+    
+    echo "<button style=\"
+      background: url('./assets/mycase.png');
+      border: none;
+      width:65%;
+      height:250%;
+      grid-column:";
     echo ($i % 7 + 1) . ";\" name=\"case\"";
     echo "value=\"$i\"";
     echo $offer_round.">";

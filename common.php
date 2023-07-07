@@ -12,7 +12,6 @@ function check_auth()
         header("Location: cookie_check.php");
     } 
 }
-
 /**
  * Get the ordinal suffix for integer value 
  *

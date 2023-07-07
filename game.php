@@ -13,14 +13,14 @@ check_auth();
 
 <head>
   <title>Deal or No Deal</title>
-  <link rel="stylesheet" type="text/css" href="./styles/main_style.css">
+  <!-- <link rel="stylesheet" type="text/css" href="./styles/main_style.css"> -->
   <link rel="stylesheet" type="text/css" href="./styles/game_style.css">
 </head>
 
 <body style="flex-direction: column;">
-<div style="position: fixed;top: 0;left: 0;">
-  <a href="logout.php">Log out</a>
-</div>
+    <div style="position: fixed;top: 0;right: 0;">
+      <a href="logout.php">Log out</a>
+    </div>
     <div class="content-body">
 
       <?php
@@ -29,6 +29,43 @@ check_auth();
         ?> 
 
     </div>
+<table class = "low">
+<td>$0.01</td>
+  <td>$1</td>
+  <td>$5</td>
+  <td>$10</td>
+  <td>$25</td>
+  <td>$50</td>
+  <td>$75</td>
+  <td>$100</td>
+  <td>$200</td>
+  <td>$300</td>
+  <td>$400</td>
+  <td>$500</td>
+  <td>$750</td>
+
+
+
+      </table>
+
+      <table class = "high">
+
+        <td>$1,000</td>
+        <td>$5,000</td>
+        <td>$10,000</td>
+        <td>$25,000</td>
+        <td>$50,000</td>
+        <td>$75,000</td>
+        <td>$100,000</td>
+        <td>$200,000</td>
+        <td>$300,000</td>
+        <td>$400,000</td>
+        <td>$500,000</td>
+        <td>$750,000</td>
+        <td>$1,000,000</td>
+
+      </table>
+
 </body>
 
 </html>
