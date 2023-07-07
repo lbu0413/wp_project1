@@ -81,9 +81,6 @@ check_auth();
 // check if new session
 if (!isset($_SESSION['gamestate'])) {
     $_SESSION['gamestate'] = new GameState();
-} 
-// check if game over and is being reset
-if (!isset($_SESSION['banker']) && isset($_SESSION['gamestate'])) {
     $_SESSION['banker'] = new Banker($_SESSION['gamestate']);
 } 
 // update gamestate with player action
