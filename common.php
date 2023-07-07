@@ -137,7 +137,7 @@ function update_leaderboard():int
     write_leaderboard($leaderboard);
     return $new_hs;
 }
-function read_local_leaderboard(): mixed
+function read_local_leaderboard() 
 {
 
     if (!isset($_COOKIE['leaderboard'])) {
@@ -150,7 +150,7 @@ function write_local_leaderboard(array $leaderboard)
     setcookie(
         'leaderboard',
         json_encode($leaderboard), 
-        time()+1_000_000
+        time()+1000000
     );
 
 }
