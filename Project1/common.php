@@ -31,8 +31,9 @@ function update_game_state()
                 $_SESSION['gamestate']->open_case($case_no);
                 if ($_SESSION['gamestate']->no_left === 1) {
                     // end game on final round
-                    $_SESSION['gamestate']->score = $_SESSION['gamestate']->get_remaining()[0]; // get final unopened case
-                    // TODO: add session variable or get to get big reveal for last case
+                    // get final unopened case
+
+                    $_SESSION['gamestate']->score = $_SESSION['gamestate']->get_remaining()[0];                     // TODO: add session variable or get to get big reveal for last case
                 } elseif ($_SESSION['gamestate']->no_left <= 6 || array_key_exists($_SESSION['gamestate']->no_left, GameState::OFFER_ROUNDS)) {
                     // make offer on certain rounds
                     $_SESSION['banker']->update_adj_offer();
@@ -61,6 +62,21 @@ function update_game_state()
  */
 function ordinal(int $number):string
 {
+    if (phpversion('tidy')[0] === '7') {
+        if ($number === 1) {
+            return "1st";
+        }
+        elseif ($number === 2) {
+            return "2nd";
+        }
+        elseif ($number === 3) {
+            return "3rd";
+        }
+        else
+        {
+            return $number."th";
+        }
+    }
     return match($number) {
         1 => "1st",
         2 => "2nd",

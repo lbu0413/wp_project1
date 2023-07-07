@@ -1,11 +1,10 @@
 <?php
 
-require __DIR__."/autoloader.php";
-cfg_autoloader();
+require __DIR__."/gamestate.php";
+require __DIR__."/banker.php";
+
 session_start();
 require __DIR__."/common.php";
-// require __DIR__ ."/gamestate.php";
-// require __DIR__ . "/banker.php";
 
 check_auth();
 ?>

@@ -12,8 +12,8 @@
 //    else reject and set counter available to false
 // if only 1 case remaining after selection dont make offer
 //    or ignore offer
-require __DIR__."/autoloader.php";
-cfg_autoloader();
+require __DIR__."/gamestate.php";
+require __DIR__."/banker.php";
 session_start();
 require __DIR__ . "/common.php";
 
