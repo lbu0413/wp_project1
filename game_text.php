@@ -35,25 +35,27 @@ function generate_case_button(int $i)
  */
 function generate_game_over()
 {
+    ?><div class="end-box"><?php
     // if game is completed show result
-    if ($_SESSION['gamestate']->score) {
-        $res = update_leaderboard();
-        if ($res) {
-            $str_res = ordinal($res);
-            echo "<h2>You got the new $str_res place global highscore!</h2>";
-        }
-        $l_res = update_local_leaderboard();
-        if ($l_res) {
-            $l_str_res = ordinal($l_res);
-            echo "<h2>You got a new $l_str_res place local highscore!</h2>";
-        }
-        ?>
+if ($_SESSION['gamestate']->score) {
+    $res = update_leaderboard();
+    if ($res) {
+        $str_res = ordinal($res);
+        echo "<h2>You got the new $str_res place global highscore!</h2>";
+    }
+    $l_res = update_local_leaderboard();
+    if ($l_res) {
+        $l_str_res = ordinal($l_res);
+        echo "<h2>You got a new $l_str_res place local highscore!</h2>";
+    }
+    ?>
         <h2>You Won $<?php echo number_format($_SESSION['gamestate']->score, 2)?>!!</h2>
         <a href="deal.php"> Play Again? </a>|<a href="index.php"> Return Home? </a>
         <?php 
         $_SESSION['gamestate']->reset();
         $_SESSION['banker']->reject_offer();
-    }
+}
+?></div><?php
 }
 /**
  * create html grid layout for briefcases
@@ -94,7 +96,7 @@ function generate_case_grid()
 function generate_offer_panel()
 {
     ?>
-    <div>
+    <div class="offer-box">
  
           <?php
             if (!isset($_SESSION['gamestate'])) {
@@ -107,6 +109,7 @@ function generate_offer_panel()
             // if offer available load offer options
             if (isset($_SESSION['banker']) && $_SESSION['banker']->offer && !$_SESSION['gamestate']->score) {
                 ?>
+
       <h2>Banker offer: $
                 <?php echo number_format($_SESSION['banker']->offer, 2) ?>
       </h2>
