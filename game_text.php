@@ -86,16 +86,19 @@ function generate_offer_panel()
     ?>
     <div>
  
-        <?php
-        // if offer is declined remove offer
-        if (isset($_GET['offer']) && $_GET['offer'] == -1) {
-            $_SESSION['banker']->reject_offer();
-        }
-        // if offer available load offer options
-        if (isset($_SESSION['banker']) && $_SESSION['banker']->offer && !$_SESSION['gamestate']->score) {
-            ?>
+          <?php
+            if (!isset($_SESSION['gamestate'])) {
+                header("Location: deal.php");
+            }
+            // if offer is declined remove offer
+            if (isset($_GET['offer']) && $_GET['offer'] == -1) {
+                $_SESSION['banker']->reject_offer();
+            }
+            // if offer available load offer options
+            if (isset($_SESSION['banker']) && $_SESSION['banker']->offer && !$_SESSION['gamestate']->score) {
+                ?>
       <h2>Banker offer: $
-            <?php echo number_format($_SESSION['banker']->offer, 2) ?>
+                <?php echo number_format($_SESSION['banker']->offer, 2) ?>
       </h2>
       <form style="margin: auto;" action="deal.php" method="get">
         <button value="-1" name="case">Accept Offer</button>
@@ -103,19 +106,19 @@ function generate_offer_panel()
       <form style="margin: auto;" action="game.php" method="get">
         <button value="-1" name="offer">Decline Offer</button>
       </form>
-            <?php
-            if ($_SESSION['gamestate']->counter) {
-                ?>
+                <?php
+                if ($_SESSION['gamestate']->counter) {
+                    ?>
       <h2>Counter Offer:</h2>
       <p>Only 1 use per game</p>
       <form action="deal.php" method="POST">
         <input type="number" name="c_offer" required match="\d+">
         <button type="submit">Submit</button>
       </form>
-                <?php
-            }
-        } 
-        ?>
+                    <?php
+                }
+            } 
+            ?>
       </div>
     <?php
 }
