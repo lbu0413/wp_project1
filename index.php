@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href="styles/card_style.css" />
 </head>
 
-<body>
+<body class="main-body">
   <!--Make the header sticky-->
   <header id="main-header">
     <img src="./assets/logo-large.png" alt="DEAL OR NO DEAL" />

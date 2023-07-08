@@ -66,7 +66,7 @@ if ($_SESSION['gamestate']->score) {
 function generate_case_grid()
 {
     if ($_SESSION['gamestate']->keep===-1) {
-        echo "<h2> Select your case to keep </h2>";
+        echo "<h2 style=\"margin-left:40%;\"> Select your case to keep </h2>";
     }
     ?>
 <form style="margin:auto;" action="deal.php" method="get">
@@ -110,20 +110,23 @@ function generate_offer_panel()
             if (isset($_SESSION['banker']) && $_SESSION['banker']->offer && !$_SESSION['gamestate']->score) {
                 ?>
 
+      <div>
+        
       <h2>Banker offer: $
                 <?php echo number_format($_SESSION['banker']->offer, 2) ?>
       </h2>
-      <form style="margin: auto;" action="deal.php" method="get">
+      <form style="margin: auto;width: 50%;float: left;" action="deal.php" method="get">
         <button value="-1" name="case">Accept Offer</button>
       </form>
-      <form style="margin: auto;" action="game.php" method="get">
+      <form style="margin: auto;width: 50%;float: right;" action="game.php" method="get">
         <button value="-1" name="offer">Decline Offer</button>
       </form>
+      </div>
                 <?php
                 if ($_SESSION['gamestate']->counter) {
                     ?>
-      <h2>Counter Offer:</h2>
-      <p>Only 1 use per game</p>
+      <h2 style="margin: 5px;">Counter Offer:</h2>
+      <p style="margin: 5px;">Only 1 use per game</p>
       <form action="deal.php" method="POST">
         <input type="number" name="c_offer" required match="\d+">
         <button type="submit">Submit</button>

@@ -7,6 +7,6 @@ if (isset($_COOKIE['username'])) {
 if (isset($_COOKIE['password'])) {
     unset($_COOKIE['password']);
 }
-unset($_SESSION['auth']);
+session_unset();
 header("Location: signin.html");
 ?>

@@ -12,8 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (array_key_exists($username, $user_data) && $user_data[$username] === $password) {
         setcookie("username", $username, time() + (86400 * 30), "/"); // Cookie expires in 30 days
         setcookie("password", $password, time() + (86400 * 30), "/"); // Cookie expires in 30 days
-
+        session_unset();
         $_SESSION["username"] = $username;
+
         $_SESSION["auth"] = true;
 
         header("Location: deal.php");

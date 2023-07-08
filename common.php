@@ -7,8 +7,9 @@
  */
 function check_auth()
 {
+    error_log(print_r($_SESSION, true));
     // redirect to login page if no authentication from login
-    if (!isset($_SESSION['auth']) || !$_SESSION['auth']) {
+    if (!isset($_SESSION['auth']) || !$_SESSION['auth'] || $_SESSION['username'] !== $_COOKIE['username']) {
         header("Location: cookie_check.php");
     } 
 }

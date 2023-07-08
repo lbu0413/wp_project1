@@ -1,14 +1,19 @@
 body {
-  background-image: url("../assets/game-backrnd.png");
+  background: url("../assets/game-backrnd.png"), #001013;
   font-family: "Eurostile", sans-serif;
+  background-repeat: false;
   display: flex;
-  background-size: 100% 100%;
+  background-size: 100vw 100vh;
   color: gold;
   overflow: hidden;
 }
 .offer-box {
   margin: auto;
   position: fixed;
+  display: flex;
+  flex-flow: column nowrap;
+  text-align: center;
+  place-content: center center;
   left: 40%;
 }
 .end-box {
@@ -30,18 +35,20 @@ body {
   color: gold;
 }
 .low {
-  position: relative;
-  top: -200px;
+  position: fixed;
+  top: 200px;
+  left: 5px;
   border: 1px groove goldenrod;
   border-collapse: collapse;
-  margin-right: 94%;
+  /* margin-right: 94%; */
 }
 .high {
-  position: relative;
-  top: -530px;
+  position: fixed;
+  top: 200px;
+  right: 5px;
   border: 1px groove goldenrod;
   border-collapse: collapse;
-  margin-left: 94%;
+  /* margin-left: 94%; */
 }
 td {
   background-color: goldenrod;
@@ -49,4 +56,7 @@ td {
   color: black;
   display: grid;
   border: 2px groove goldenrod;
+}
+a {
+  color: gold;
 }

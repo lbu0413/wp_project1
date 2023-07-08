@@ -6,7 +6,7 @@
 html {
   height: 100%;
 }
-body {
+.main-body {
   font-family: "Eurostile", sans-serif;
   display: flex;
   flex-direction: column;

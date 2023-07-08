@@ -10,6 +10,7 @@
   color: white;
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2)),
     url("../assets/background.jpeg");
+  background-color: #0f0003;
   background-size: cover;
 }
 
