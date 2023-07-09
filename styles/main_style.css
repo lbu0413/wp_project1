@@ -102,8 +102,8 @@ html {
   animation-timing-function: linear;
   -webkit-animation-name: ticker;
   animation-name: ticker;
-  -webkit-animation-duration: 10s;
-  animation-duration: 10s;
+  -webkit-animation-duration: 20s;
+  animation-duration: 20s;
 }
 .ticker div {
   margin-left: 2rem;
