@@ -11,6 +11,9 @@ html {
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: hidden;
+  overflow-x: hidden;
+  max-width: 100%;
   margin: 0;
 }
 .content-body {
